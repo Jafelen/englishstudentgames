@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🧠 Gerund & Infinitive Trainer – FCE B2</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--g:#8b5cf6;--i:#0ea5e9;--b:#f59e0b;--ok:#4ade80;--err:#f87171}
+.site-header{text-align:center;padding:48px 20px 16px}
+.site-header h1{font-size:2.6em;margin-bottom:8px;text-shadow:2px 2px 6px rgba(0,0,0,.35);letter-spacing:1px}
+.site-header .tagline{font-size:1.1em;opacity:.75;max-width:480px;margin:0 auto 10px;line-height:1.5}
+.site-footer{text-align:center;padding:28px 20px 36px;opacity:.5;font-size:.82em;letter-spacing:.3px}
+.site-footer a{color:inherit;text-decoration:none}
+.site-footer a:hover{opacity:.8;text-decoration:underline}
+body{font-family:'Segoe UI',Tahoma,sans-serif;background:linear-gradient(135deg,#0f0c29,#302b63,#24243e);min-height:100vh;display:flex;flex-direction:column;align-items:center;color:#fff;padding:20px}
+.wrap{width:100%;max-width:680px}
+.title{text-align:center;font-size:1.45rem;font-weight:800;margin-bottom:4px}
+.title span{color:#a78bfa}
+.round-badge{text-align:center;margin-bottom:10px;display:flex;align-items:center;justify-content:center;gap:8px}
+.round-pill{background:rgba(167,139,250,.2);border:1px solid rgba(167,139,250,.4);color:#c4b5fd;font-size:.72rem;font-weight:700;padding:3px 12px;border-radius:99px;letter-spacing:.5px}
+.retry-pill{background:rgba(245,158,11,.15);border:1px solid rgba(245,158,11,.4);color:#fcd34d;font-size:.72rem;font-weight:700;padding:3px 12px;border-radius:99px;letter-spacing:.5px;display:none}
+.stats{display:flex;justify-content:space-between;font-size:.82rem;color:rgba(255,255,255,.6);margin-bottom:10px}
+.stats strong{color:#fff;font-size:1rem}
+.prog-wrap{background:rgba(255,255,255,.08);border-radius:99px;height:6px;margin-bottom:16px;overflow:hidden}
+.prog-bar{height:100%;background:linear-gradient(90deg,var(--g),var(--i),var(--b));border-radius:99px;transition:width .4s ease}
+.combo{text-align:center;height:34px;font-size:1rem;font-weight:700;color:var(--b);display:flex;align-items:center;justify-content:center;margin-bottom:8px}
+.card{background:rgba(255,255,255,.05);border:1.5px solid rgba(255,255,255,.1);border-radius:22px;padding:34px 26px;text-align:center;min-height:175px;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:border-color .3s,background .3s}
+.card.ok{border-color:var(--ok);background:rgba(74,222,128,.08)}
+.card.err{border-color:var(--err);background:rgba(248,113,113,.08)}
+.word{font-size:2rem;font-weight:800;color:#e2e8f0;margin-bottom:4px;line-height:1.2}
+.hint-row{display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:2px}
+.hint{font-size:.76rem;color:rgba(255,255,255,.35);font-style:italic}
+.retry-tag{font-size:.68rem;background:rgba(245,158,11,.2);color:#fcd34d;border-radius:99px;padding:1px 8px;font-weight:700;display:none}
+/* FEEDBACK */
+.fb{margin-top:16px;padding:13px 15px;border-radius:13px;font-size:.86rem;line-height:1.6;text-align:left;width:100%;display:none}
+.fb.show{display:block}
+.fb.ok{background:rgba(74,222,128,.1);border-left:3px solid var(--ok);color:#bbf7d0}
+.fb.err{background:rgba(248,113,113,.1);border-left:3px solid var(--err);color:#fecaca}
+.fb-section{margin-bottom:7px}
+.fb-section:last-child{margin-bottom:0}
+.fb-label{font-weight:700;font-size:.75rem;text-transform:uppercase;letter-spacing:.5px;opacity:.7;margin-bottom:3px}
+.fb-divider{border:none;border-top:1px solid rgba(255,255,255,.1);margin:8px 0}
+/* BUTTONS */
+.btn-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin:14px 0 10px}
+.btn{padding:13px 8px;border:none;border-radius:13px;cursor:pointer;font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.3px;color:#fff;transition:transform .15s,filter .15s,opacity .2s;line-height:1.3}
+.btn:hover:not(:disabled){transform:translateY(-3px);filter:brightness(1.2)}
+.btn:active:not(:disabled){transform:translateY(-1px)}
+.btn:disabled{opacity:.45;cursor:not-allowed;transform:none!important}
+.bg{background:linear-gradient(145deg,#8b5cf6,#6d28d9);box-shadow:0 4px 14px rgba(109,40,217,.35)}
+.bi{background:linear-gradient(145deg,#0ea5e9,#0369a1);box-shadow:0 4px 14px rgba(3,105,161,.35)}
+.bb{background:linear-gradient(145deg,#f59e0b,#b45309);box-shadow:0 4px 14px rgba(180,83,9,.35)}
+.btn.s-ok{outline:3px solid var(--ok);filter:brightness(1.3)}
+.btn.s-err{outline:3px solid var(--err);filter:brightness(.7)}
+.btn.reveal{outline:3px solid var(--ok);filter:brightness(1.3)}
+.btn-next{width:100%;padding:13px;background:linear-gradient(135deg,#e94560,#9b1b31);border:none;border-radius:13px;color:#fff;font-size:.93rem;font-weight:700;cursor:pointer;display:none;box-shadow:0 4px 18px rgba(233,69,96,.4);transition:all .2s}
+.btn-next:hover{transform:translateY(-2px);filter:brightness(1.1)}
+.btn-next.show{display:block}
+.bottom-bar{display:flex;align-items:center;justify-content:space-between;margin-top:14px;flex-wrap:wrap;gap:8px}
+.legend{display:flex;gap:12px;flex-wrap:wrap;font-size:.7rem;color:rgba(255,255,255,.4)}
+.legend-item{display:flex;align-items:center;gap:5px}
+.dot{width:8px;height:8px;border-radius:50%}
+.btn-restart{background:none;border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.4);font-size:.7rem;padding:4px 11px;border-radius:99px;cursor:pointer;transition:all .2s}
+.btn-restart:hover{border-color:rgba(255,255,255,.4);color:rgba(255,255,255,.8)}
+.shortcut-hint{text-align:center;font-size:.68rem;color:rgba(255,255,255,.2);margin-top:6px}
+/* RESULT */
+#result-screen{display:none;text-align:center;padding:20px}
+#result-screen.show{display:block}
+.r-emoji{font-size:3rem;margin-bottom:8px}
+.r-title{font-size:1.55rem;font-weight:800;margin-bottom:4px}
+.r-round{font-size:.8rem;color:rgba(255,255,255,.4);margin-bottom:4px}
+.r-score{font-size:3.2rem;font-weight:900;margin:12px 0 4px;background:linear-gradient(90deg,#4ade80,#22d3ee);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.r-sub{color:rgba(255,255,255,.55);font-size:.88rem;margin-bottom:18px}
+.r-cats{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+.r-cat{padding:9px 16px;border-radius:11px;background:rgba(255,255,255,.06);font-size:.8rem;font-weight:600;text-align:left}
+.missed-box{background:rgba(248,113,113,.08);border:1px solid rgba(248,113,113,.2);border-radius:14px;padding:14px;margin-bottom:16px;text-align:left;max-height:200px;overflow-y:auto}
+.missed-box h4{font-size:.75rem;color:#fca5a5;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+.missed-item{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:.8rem}
+.missed-item:last-child{border-bottom:none}
+.missed-cat{font-size:.7rem;padding:2px 8px;border-radius:20px;font-weight:600;background:rgba(255,255,255,.1)}
+.result-btns{display:flex;flex-direction:column;gap:10px;align-items:center}
+.btn-play{padding:13px 44px;border:none;border-radius:13px;color:#fff;font-size:.98rem;font-weight:700;cursor:pointer;transition:all .2s}
+.btn-play.primary{background:linear-gradient(135deg,#e94560,#9b1b31);box-shadow:0 4px 18px rgba(233,69,96,.4)}
+.btn-play.secondary{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);box-shadow:none;font-size:.88rem;padding:10px 30px}
+.btn-play:hover{transform:translateY(-2px);filter:brightness(1.1)}
+/* CONFIRM DIALOG */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;z-index:100;display:none}
+.overlay.show{display:flex}
+.dialog{background:#1e1b4b;border:1px solid rgba(167,139,250,.3);border-radius:18px;padding:28px 24px;text-align:center;max-width:320px;width:90%}
+.dialog h3{margin-bottom:8px;font-size:1.1rem}
+.dialog p{font-size:.85rem;color:rgba(255,255,255,.6);margin-bottom:20px}
+.dialog-btns{display:flex;gap:10px;justify-content:center}
+.dbtn{padding:10px 22px;border:none;border-radius:10px;font-weight:700;cursor:pointer;font-size:.85rem}
+.dbtn.yes{background:linear-gradient(135deg,#e94560,#9b1b31);color:#fff}
+.dbtn.no{background:rgba(255,255,255,.1);color:#fff}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+@keyframes pop{0%{transform:scale(.95)}50%{transform:scale(1.02)}100%{transform:scale(1)}}
+.anim-ok{animation:pop .35s ease}
+.anim-err{animation:shake .4s ease}
+</style>
+</head>
+<body>
+<header class="site-header">
+  <a href="../../" style="color:inherit;text-decoration:none">
+    <h1>🎮 English Student Games</h1>
+    <p class="tagline">Juegos interactivos para aprender y practicar inglés — diseñados para todas las edades</p>
+  </a>
+</header>
+<div class="wrap">
+  <div id="game-screen">
+    <div class="title">🧠 Gerund &amp; Infinitive Trainer <span>FCE B2</span></div>
+    <div class="round-badge">
+      <span class="round-pill" id="round-pill">RONDA 1</span>
+      <span class="retry-pill" id="retry-pill">🔁 Incluye refuerzo</span>
+    </div>
+    <div class="stats">
+      <div>📝 <strong id="cur">1</strong> / <span id="tot">84</span></div>
+      <div>✅ <strong id="cor">0</strong> correctas</div>
+      <div>🔥 Racha: <strong id="str">0</strong></div>
+    </div>
+    <div class="prog-wrap"><div class="prog-bar" id="prog" style="width:0%"></div></div>
+    <div class="combo" id="combo"></div>
+    <div class="card" id="card">
+      <div class="word" id="word">...</div>
+      <div class="hint-row">
+        <div class="hint" id="hint"></div>
+        <span class="retry-tag" id="retry-tag">🔁 repaso</span>
+      </div>
+      <div class="fb" id="fb"></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn bg" id="bg" onclick="answer('g')">🔄 Gerund<br><small>(-ing form)</small></button>
+      <button class="btn bi" id="bi" onclick="answer('i')">📌 Infinitive<br><small>with To</small></button>
+      <button class="btn bb" id="bb" onclick="answer('b')">⚡ Bare<br><small>Infinitive</small></button>
+    </div>
+    <button class="btn-next" id="nxt" onclick="next()">Siguiente →</button>
+    <div class="bottom-bar">
+      <div class="legend">
+        <div class="legend-item"><div class="dot" style="background:#8b5cf6"></div>Gerund</div>
+        <div class="legend-item"><div class="dot" style="background:#0ea5e9"></div>Inf. with To</div>
+        <div class="legend-item"><div class="dot" style="background:#f59e0b"></div>Bare Inf.</div>
+      </div>
+      <button class="btn-restart" onclick="confirmRestart()">↩ Nueva partida</button>
+    </div>
+    <div class="shortcut-hint">Teclado: [1] Gerund · [2] Inf. with To · [3] Bare · [Enter/Space] Siguiente</div>
+  </div>
+
+  <div id="result-screen">
+    <div class="r-emoji" id="re">🎉</div>
+    <div class="r-title" id="rt"></div>
+    <div class="r-round" id="rround"></div>
+    <div class="r-score" id="rs"></div>
+    <div class="r-sub" id="rsub"></div>
+    <div class="r-cats" id="rcats"></div>
+    <div class="missed-box" id="mbox" style="display:none">
+      <h4>❌ Para repasar en la próxima ronda (×3 cada una):</h4>
+      <div id="mlist"></div>
+    </div>
+    <div class="result-btns" id="result-btns"></div>
+  </div>
+
+  <!-- Confirm restart overlay -->
+  <div class="overlay" id="overlay">
+    <div class="dialog">
+      <h3>¿Nueva partida desde cero?</h3>
+      <p>Se perderá el progreso de rondas y los errores guardados.</p>
+      <div class="dialog-btns">
+        <button class="dbtn yes" onclick="doRestart()">Sí, reiniciar</button>
+        <button class="dbtn no" onclick="closeOverlay()">Cancelar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const ITEMS = [
+  // ── GERUND ──────────────────────────────────────────────────────────────────
+  {w:"Reading",h:"gerund as subject",c:"g",
+   ex:"❌ 'Reading' IS a gerund — the -ing form acting as a noun (subject). Rule: the gerund can be the subject, object, or complement of a sentence.",
+   eg:"📖 Reading every day improves your vocabulary. (subject)"},
+  {w:"Shopping",h:"gerund as object",c:"g",
+   ex:"❌ 'Shopping' IS a gerund — the -ing form acting as a noun (direct object).",
+   eg:"🛍️ I love shopping on weekends. (object of 'love')"},
+  {w:"Swimming",h:"gerund as complement",c:"g",
+   ex:"❌ 'Swimming' IS a gerund — the -ing form acting as a noun (subject complement after 'is').",
+   eg:"🏊 My favourite hobby is swimming. (complement)"},
+  {w:"Good at",h:"adjective + preposition",c:"g",
+   ex:"❌ After a PREPOSITION ('at'), you always use the gerund. Rule: preposition + verb → verb in -ing form.",
+   eg:"🎯 She's really good at remembering names."},
+  {w:"Interested in",h:"adjective + preposition",c:"g",
+   ex:"❌ After the preposition 'in', always use the gerund. 'Interested in' is a fixed adjective + preposition structure.",
+   eg:"💡 Are you interested in joining our team?"},
+  {w:"Look forward to",h:"⚠️ 'to' = preposition here!",c:"g",
+   ex:"❌ In 'look forward to', 'to' is a PREPOSITION — not part of an infinitive. After prepositions → gerund. Classic FCE trap!",
+   eg:"✉️ I look forward to hearing from you."},
+  {w:"Admit",h:"verb + ___",c:"g",
+   ex:"❌ 'Admit' belongs to the group of verbs followed by a gerund. It expresses acknowledging something already done.",
+   eg:"😳 He admitted stealing the money."},
+  {w:"Adore",h:"verb of strong preference",c:"g",
+   ex:"❌ 'Adore' is a verb of preference/feeling, like enjoy and love, followed by a gerund.",
+   eg:"🌟 She adores dancing in the rain."},
+  {w:"Avoid",h:"verb + ___",c:"g",
+   ex:"❌ 'Avoid' is a verb followed by a gerund. It indicates not doing an activity.",
+   eg:"🚧 He always avoids making eye contact."},
+  {w:"Can't stand",h:"expression of strong dislike",c:"g",
+   ex:"❌ 'Can't stand' expresses strong negative feeling and is followed by a gerund (like dislike, hate).",
+   eg:"😤 I can't stand waiting in long queues."},
+  {w:"Consider",h:"verb + ___",c:"g",
+   ex:"❌ 'Consider' is followed by a gerund. It refers to thinking about doing something.",
+   eg:"🤔 Are you considering applying for the job?"},
+  {w:"Deny",h:"verb + ___",c:"g",
+   ex:"❌ 'Deny' is followed by a gerund. It expresses refusing to acknowledge an action.",
+   eg:"🙅 She denied taking the last biscuit."},
+  {w:"Dislike",h:"verb of preference",c:"g",
+   ex:"❌ 'Dislike' is a verb of preference/feeling, like enjoy and like, followed by a gerund.",
+   eg:"😒 I dislike getting up early on Mondays."},
+  {w:"Enjoy",h:"verb of preference",c:"g",
+   ex:"❌ 'Enjoy' is one of the most classic verbs followed by a gerund. Enjoy + verb-ing. Never 'enjoy + to'.",
+   eg:"😊 Do you enjoy travelling by train?"},
+  {w:"Finish",h:"verb + ___",c:"g",
+   ex:"❌ 'Finish' is followed by a gerund. It indicates completing an activity.",
+   eg:"✅ Have you finished writing the report?"},
+  {w:"Imagine",h:"verb + ___",c:"g",
+   ex:"❌ 'Imagine' is followed by a gerund. It refers to picturing a scenario.",
+   eg:"💭 Imagine living in a house by the sea!"},
+  {w:"(Don't) mind",h:"verb of preference",c:"g",
+   ex:"❌ 'Mind' is always followed by a gerund. 'I don't mind...' and 'Would you mind...?' are classic B2 structures.",
+   eg:"🙂 I don't mind sharing a room with someone."},
+  {w:"Miss",h:"verb + ___",c:"g",
+   ex:"❌ 'Miss' (feeling the absence of something) is followed by a gerund.",
+   eg:"💔 I miss seeing my friends every day."},
+  {w:"Have difficulty (in)",h:"fixed expression",c:"g",
+   ex:"❌ 'Have difficulty (in)' is a fixed expression that takes a gerund. When 'in' is present, it's a preposition → gerund.",
+   eg:"😓 She has difficulty (in) understanding fast speech."},
+  {w:"It's no use",h:"fixed expression",c:"g",
+   ex:"❌ 'It's no use' is a fixed expression always followed by a gerund. It means there's no benefit in doing something.",
+   eg:"🤷 It's no use crying over spilled milk."},
+  {w:"It's not worth",h:"fixed expression",c:"g",
+   ex:"❌ 'It's not worth' is a fixed expression followed by a gerund. It means something doesn't merit the effort.",
+   eg:"💸 It's not worth arguing about such a small thing."},
+  {w:"There's no point (in)",h:"fixed expression",c:"g",
+   ex:"❌ 'There's no point (in)' is a fixed expression followed by a gerund. 'In' is a preposition → prepositions always take gerund.",
+   eg:"⏰ There's no point in arriving early if they're not ready."},
+
+  // ── INFINITIVE WITH TO ──────────────────────────────────────────────────────
+  {w:"Difficult",h:"adjective → what follows?",c:"i",
+   ex:"❌ After adjectives like 'difficult', use the infinitive with 'to'. Structure: It is + adjective + to + verb.",
+   eg:"📚 It's difficult to learn a language in one month."},
+  {w:"Easy",h:"adjective → what follows?",c:"i",
+   ex:"❌ After 'easy' (and similar adjectives), use infinitive with 'to'. Structure: It is + adjective + to + verb.",
+   eg:"😄 It's easy to make friends when you're confident."},
+  {w:"Important",h:"adjective → what follows?",c:"i",
+   ex:"❌ After 'important', use the infinitive with 'to'. Structure: It is + adjective + to + verb.",
+   eg:"⭐ It's important to practise speaking every day."},
+  {w:"Lovely",h:"adjective → what follows?",c:"i",
+   ex:"❌ After 'lovely' (adjectives describing how something feels), use the infinitive with 'to'.",
+   eg:"🌸 It's lovely to see you after so long!"},
+  {w:"Necessary",h:"adjective → what follows?",c:"i",
+   ex:"❌ After 'necessary', use the infinitive with 'to'. Structure: It is + adjective + to + verb.",
+   eg:"📋 Is it necessary to bring your passport?"},
+  {w:"Normal",h:"adjective → what follows?",c:"i",
+   ex:"❌ After 'normal', use the infinitive with 'to'. Describes whether an action is standard or expected.",
+   eg:"💆 It's normal to feel nervous before an exam."},
+  {w:"Possible",h:"adjective → what follows?",c:"i",
+   ex:"❌ After 'possible', use the infinitive with 'to'. Structure: It is + adjective + to + verb.",
+   eg:"🚀 Is it possible to finish this by Friday?"},
+  {w:"Unusual",h:"adjective → what follows?",c:"i",
+   ex:"❌ After 'unusual', use the infinitive with 'to'. Describes an uncommon action.",
+   eg:"🦄 It's unusual to see snow in this city."},
+  {w:"Delighted",h:"emotional adjective → what follows?",c:"i",
+   ex:"❌ After emotional adjectives like 'delighted', use the infinitive with 'to'. They describe your reaction to something.",
+   eg:"🎉 I'm delighted to announce that you've passed!"},
+  {w:"Surprised",h:"emotional adjective → what follows?",c:"i",
+   ex:"❌ After emotional adjectives like 'surprised', use the infinitive with 'to'. It shows your reaction to an event.",
+   eg:"😲 I was surprised to see him at the party."},
+  {w:"Ability",h:"noun → what follows?",c:"i",
+   ex:"❌ 'Ability' is a noun indicating capacity. After nouns of capacity/opportunity/decision, use the infinitive with 'to'.",
+   eg:"💪 She has the ability to speak four languages."},
+  {w:"Chance",h:"noun → what follows?",c:"i",
+   ex:"❌ 'Chance' indicates opportunity. After nouns of opportunity/plan, use the infinitive with 'to'.",
+   eg:"🍀 This is your chance to shine!"},
+  {w:"Decision",h:"noun → what follows?",c:"i",
+   ex:"❌ 'Decision' is a noun indicating a choice. After nouns of decision/plan, use the infinitive with 'to'.",
+   eg:"🗳️ Her decision to study abroad changed her life."},
+  {w:"Failure",h:"noun → what follows?",c:"i",
+   ex:"❌ 'Failure' meaning 'not doing something' is followed by the infinitive with 'to'. Often used formally.",
+   eg:"⚠️ Failure to comply with the rules will result in disqualification."},
+  {w:"Idea",h:"noun → what follows?",c:"i",
+   ex:"❌ 'Idea' meaning a plan or suggestion is followed by the infinitive with 'to'.",
+   eg:"💡 Whose idea was it to stay up all night?"},
+  {w:"Opportunity",h:"noun → what follows?",c:"i",
+   ex:"❌ 'Opportunity' indicates a chance. After opportunity/chance/ability, use the infinitive with 'to'.",
+   eg:"🌍 She never missed an opportunity to travel."},
+  {w:"Plan",h:"noun → what follows?",c:"i",
+   ex:"❌ 'Plan' (as a noun) expressing an intention is followed by the infinitive with 'to'.",
+   eg:"📅 His plan to retire early didn't work out."},
+  {w:"Refusal",h:"noun → what follows?",c:"i",
+   ex:"❌ 'Refusal' is a noun of decision/action followed by the infinitive with 'to'.",
+   eg:"🚫 His refusal to apologise made things worse."},
+  {w:"Right",h:"noun → what follows?",c:"i",
+   ex:"❌ 'Right' (noun meaning entitlement) is followed by the infinitive with 'to'. 'Everyone has the right to...'",
+   eg:"⚖️ Everyone has the right to express their opinion."},
+  {w:"Way",h:"noun → what follows?",c:"i",
+   ex:"❌ 'Way' meaning method/manner is followed by the infinitive with 'to'. 'The way to do something'.",
+   eg:"🗺️ Is this the best way to get to the station?"},
+  {w:"Afford",h:"verb of possibility",c:"i",
+   ex:"❌ 'Afford' is followed by the infinitive with 'to'. Usually used with 'can't'.",
+   eg:"💰 I can't afford to miss this opportunity."},
+  {w:"Agree",h:"verb of intention",c:"i",
+   ex:"❌ 'Agree' is followed by the infinitive with 'to'. It expresses mutual consent towards a future action.",
+   eg:"🤝 They agreed to meet at the café at noon."},
+  {w:"Appear",h:"verb of seeming",c:"i",
+   ex:"❌ 'Appear' (meaning 'seem') is followed by the infinitive with 'to'. Structure: subject + appear + to + verb.",
+   eg:"🔍 She appears to know the answer already."},
+  {w:"Arrange",h:"verb of planning",c:"i",
+   ex:"❌ 'Arrange' is followed by the infinitive with 'to'. It refers to organising a future action.",
+   eg:"📞 I've arranged to pick you up at seven."},
+  {w:"Choose",h:"verb of decision",c:"i",
+   ex:"❌ 'Choose' is followed by the infinitive with 'to'. It expresses making a voluntary decision.",
+   eg:"🎭 She chose to study drama instead of law."},
+  {w:"Decide",h:"verb of decision",c:"i",
+   ex:"❌ 'Decide' is followed by the infinitive with 'to'. It refers to making a choice about a future action.",
+   eg:"✈️ We decided to travel by train."},
+  {w:"Deserve",h:"verb of merit",c:"i",
+   ex:"❌ 'Deserve' is followed by the infinitive with 'to'. It refers to merit or entitlement.",
+   eg:"🏆 You deserve to win after all that hard work!"},
+  {w:"Hope",h:"verb of intention",c:"i",
+   ex:"❌ 'Hope' is followed by the infinitive with 'to'. It refers to a wish about the future.",
+   eg:"🌟 I hope to visit Japan one day."},
+  {w:"Learn",h:"verb of achievement",c:"i",
+   ex:"❌ 'Learn' (acquiring a skill) is followed by the infinitive with 'to'. Don't confuse with 'learn about' + gerund.",
+   eg:"🚗 She learned to drive when she was 17."},
+  {w:"Manage",h:"verb of achievement",c:"i",
+   ex:"❌ 'Manage' (= succeed in doing something difficult) is followed by the infinitive with 'to'.",
+   eg:"🧩 Did you manage to finish the puzzle?"},
+  {w:"Offer",h:"verb of intention",c:"i",
+   ex:"❌ 'Offer' is followed by the infinitive with 'to'. It expresses proposing to do something.",
+   eg:"🤲 He offered to help carry the bags."},
+  {w:"Promise",h:"verb of commitment",c:"i",
+   ex:"❌ 'Promise' is followed by the infinitive with 'to'. It expresses a commitment about a future action.",
+   eg:"🤞 She promised to call as soon as she arrived."},
+  {w:"Seem",h:"verb of appearance",c:"i",
+   ex:"❌ 'Seem' is followed by the infinitive with 'to'. It describes how something looks or appears.",
+   eg:"🤔 You seem to be worried about something."},
+  {w:"Advise",h:"verb + object + ___",c:"i",
+   ex:"❌ 'Advise' takes a direct object + infinitive with 'to'. Structure: advise + someone + to + verb.",
+   eg:"👩‍⚕️ The doctor advised me to rest for a week."},
+  {w:"Allow",h:"verb + object + ___",c:"i",
+   ex:"❌ 'Allow' takes a direct object + infinitive with 'to'. Structure: allow + someone + to + verb.",
+   eg:"🔓 They allowed us to leave early on Friday."},
+  {w:"Enable",h:"verb + object + ___",c:"i",
+   ex:"❌ 'Enable' takes a direct object + infinitive with 'to'. It means making something possible for someone.",
+   eg:"🚀 This scholarship will enable her to study abroad."},
+  {w:"Encourage",h:"verb + object + ___",c:"i",
+   ex:"❌ 'Encourage' takes a direct object + infinitive with 'to'. It means motivating someone to act.",
+   eg:"💪 My teacher encouraged me to apply for the prize."},
+  {w:"Force",h:"verb + object + ___",c:"i",
+   ex:"❌ 'Force' takes a direct object + infinitive with 'to'. It means making someone do something.",
+   eg:"😤 Nobody forced you to stay here."},
+  {w:"Invite",h:"verb + object + ___",c:"i",
+   ex:"❌ 'Invite' takes a direct object + infinitive with 'to'. It means asking someone to do something.",
+   eg:"🎉 They invited us to join the celebration."},
+  {w:"Order",h:"verb + object + ___",c:"i",
+   ex:"❌ 'Order' takes a direct object + infinitive with 'to'. It's a formal command verb.",
+   eg:"🪖 The general ordered his troops to advance."},
+  {w:"Persuade",h:"verb + object + ___",c:"i",
+   ex:"❌ 'Persuade' takes a direct object + infinitive with 'to'. It means convincing someone to do something.",
+   eg:"🎤 She persuaded her friend to come to the concert."},
+  {w:"Remind",h:"verb + object + ___",c:"i",
+   ex:"❌ 'Remind' takes a direct object + infinitive with 'to'. It means prompting someone to remember an action.",
+   eg:"📌 Can you remind me to send that email?"},
+  {w:"Teach",h:"verb + object + ___",c:"i",
+   ex:"❌ 'Teach' takes a direct object + infinitive with 'to'. It means instructing someone in a skill.",
+   eg:"🎸 His dad taught him to play the guitar."},
+  {w:"Tell",h:"verb + object + ___",c:"i",
+   ex:"❌ 'Tell' (giving instructions) takes a direct object + infinitive with 'to'.",
+   eg:"🗣️ She told me not to worry about it."},
+  {w:"Warn",h:"verb + object + ___",c:"i",
+   ex:"❌ 'Warn' takes a direct object + infinitive with 'to'. It means alerting someone to avoid or do something.",
+   eg:"⚠️ He warned us to be careful on the ice."},
+  {w:"The first",h:"ordinal → what follows?",c:"i",
+   ex:"❌ After ordinals like 'the first', 'the last', 'the only', use the infinitive with 'to' instead of a relative clause.",
+   eg:"🥇 She was the first to cross the finish line."},
+  {w:"The second",h:"ordinal → what follows?",c:"i",
+   ex:"❌ After ordinals like 'the second', use the infinitive with 'to'. It replaces a relative clause (= the second who...).",
+   eg:"🥈 He was the second to arrive at the meeting."},
+  {w:"The next",h:"ordinal → what follows?",c:"i",
+   ex:"❌ After 'the next' (used as an ordinal), use the infinitive with 'to'. It replaces a relative clause.",
+   eg:"➡️ You're the next to present your project."},
+  {w:"The last",h:"ordinal → what follows?",c:"i",
+   ex:"❌ After 'the last', use the infinitive with 'to'. It replaces a relative clause (= the last one who...).",
+   eg:"🔚 He was always the last to leave the office."},
+  {w:"The only",h:"limiting expression → what follows?",c:"i",
+   ex:"❌ After 'the only', use the infinitive with 'to'. It replaces a relative clause (= the only one who...).",
+   eg:"🌟 She was the only student to score 100%."},
+
+  // ── BARE INFINITIVE ─────────────────────────────────────────────────────────
+  {w:"Can",h:"modal verb",c:"b",
+   ex:"❌ 'Can' is a modal verb. After ALL modal verbs, use the bare infinitive (no 'to'). Never say 'can to do'.",
+   eg:"🎵 She can play the piano beautifully."},
+  {w:"Must",h:"modal verb (obligation)",c:"b",
+   ex:"❌ 'Must' is a modal verb of obligation. After all modals → bare infinitive. Never 'must to go'.",
+   eg:"📅 You must submit your assignment by Monday."},
+  {w:"Mustn't",h:"modal verb (prohibition)",c:"b",
+   ex:"❌ 'Mustn't' is a modal expressing prohibition. After all modals → bare infinitive.",
+   eg:"🚫 You mustn't use your phone during the exam."},
+  {w:"Should",h:"modal verb (advice)",c:"b",
+   ex:"❌ 'Should' is a modal of advice/recommendation. After all modals → bare infinitive.",
+   eg:"💊 You should see a doctor if you feel worse."},
+  {w:"Will",h:"modal verb (future)",c:"b",
+   ex:"❌ 'Will' is a modal for future/intention. After all modals → bare infinitive.",
+   eg:"📞 I will call you tomorrow morning."},
+  {w:"May",h:"modal verb (possibility/permission)",c:"b",
+   ex:"❌ 'May' is a modal of possibility or permission. After all modals → bare infinitive.",
+   eg:"🌧️ It may rain this afternoon — take an umbrella."},
+  {w:"Might",h:"modal verb (weak possibility)",c:"b",
+   ex:"❌ 'Might' is a modal of weak possibility. After all modals → bare infinitive.",
+   eg:"🤷 She might come to the party if she finishes work early."},
+  {w:"Help",h:"causative verb",c:"b",
+   ex:"❌ 'Help' can be followed by a bare infinitive OR infinitive with 'to' — both accepted. The bare infinitive is more natural in spoken B2.",
+   eg:"🤝 Can you help me (to) carry these boxes?"},
+  {w:"Let",h:"causative verb",c:"b",
+   ex:"❌ 'Let' (= allow/permit) is a causative verb always followed by the bare infinitive. Structure: let + someone + bare infinitive.",
+   eg:"🔑 They let us use the swimming pool for free."},
+  {w:"Make",h:"causative verb",c:"b",
+   ex:"❌ 'Make' (causative = force/cause) is always followed by the bare infinitive. Structure: make + someone + bare infinitive. (Passive: 'He was made to wait.')",
+   eg:"😂 That film always makes me laugh."},
+  {w:"Would rather",h:"preference expression",c:"b",
+   ex:"❌ 'Would rather' expresses preference and is followed by the bare infinitive. Structure: would rather + bare inf (+ than + bare inf).",
+   eg:"🍕 I would rather stay at home than go to the party."},
+  {w:"Had better",h:"advice/warning expression",c:"b",
+   ex:"❌ 'Had better' expresses strong advice or warning and is followed by the bare infinitive.",
+   eg:"⚡ You had better leave now or you'll miss the train."}
+];
+
+// ── CONSTANTS ─────────────────────────────────────────────────────────────────
+const CAT={g:{label:'🔄 Gerund',col:'#8b5cf6'},i:{label:'📌 Infinitive with To',col:'#0ea5e9'},b:{label:'⚡ Bare Infinitive',col:'#f59e0b'}};
+
+// ── STATE ─────────────────────────────────────────────────────────────────────
+let deck=[], idx=0, cor=0, streak=0, maxStreak=0, done=false;
+let missedWords=new Set();   // words missed this round
+let prevMissedWords=new Set(); // words missed last round (drive ×3 retry)
+let roundNum=1;
+let stats={g:{c:0,t:0},i:{c:0,t:0},b:{c:0,t:0}};
+
+// ── HELPERS ───────────────────────────────────────────────────────────────────
+function shuffle(a){const r=[...a];for(let i=r.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[r[i],r[j]]=[r[j],r[i]]}return r}
+
+function deConsecutive(arr){
+  const a=[...arr];
+  for(let i=1;i<a.length;i++){
+    if(a[i].w===a[i-1].w){
+      let j=i+1;
+      while(j<a.length&&a[j].w===a[i].w)j++;
+      if(j<a.length)[a[i],a[j]]=[a[j],a[i]];
+    }
+  }
+  return a;
+}
+
+function cleanRule(ex){return ex.replace(/^❌\s*/,'')}
+
+function buildDeck(){
+  let base=shuffle(ITEMS.map(it=>({...it,isRetry:false})));
+  if(prevMissedWords.size===0)return base;
+  // Add 3 copies of each previously missed item, tagged as retry
+  const extras=[];
+  ITEMS.filter(it=>prevMissedWords.has(it.w)).forEach(it=>{
+    extras.push({...it,isRetry:true});
+    extras.push({...it,isRetry:true});
+    extras.push({...it,isRetry:true});
+  });
+  return deConsecutive(shuffle([...base,...extras]));
+}
+
+// ── GAME FLOW ─────────────────────────────────────────────────────────────────
+function startGame(fromScratch=false){
+  if(fromScratch){roundNum=1;prevMissedWords=new Set();}
+  deck=buildDeck();
+  idx=0;cor=0;streak=0;maxStreak=0;done=false;missedWords=new Set();
+  stats={g:{c:0,t:0},i:{c:0,t:0},b:{c:0,t:0}};
+  document.getElementById('result-screen').style.display='none';
+  document.getElementById('result-screen').classList.remove('show');
+  document.getElementById('game-screen').style.display='block';
+  // Round UI
+  document.getElementById('round-pill').textContent=`RONDA ${roundNum}`;
+  const rp=document.getElementById('retry-pill');
+  rp.style.display=prevMissedWords.size>0?'inline':'none';
+  render();
+}
+
+function render(){
+  done=false;
+  const it=deck[idx];
+  document.getElementById('word').textContent=it.w;
+  document.getElementById('hint').textContent=it.hint||'';
+  // Retry tag
+  const rt=document.getElementById('retry-tag');
+  rt.style.display=it.isRetry?'inline':'none';
+  // Reset card
+  document.getElementById('card').className='card';
+  document.getElementById('fb').className='fb';
+  document.getElementById('fb').innerHTML='';
+  ['bg','bi','bb'].forEach(id=>{
+    const b=document.getElementById(id);
+    b.disabled=false;
+    b.className=b.className.replace(/\s*(s-ok|s-err|reveal)\b/g,'');
+  });
+  document.getElementById('nxt').classList.remove('show');
+  document.getElementById('cur').textContent=idx+1;
+  document.getElementById('tot').textContent=deck.length;
+  document.getElementById('cor').textContent=cor;
+  document.getElementById('str').textContent=streak;
+  document.getElementById('prog').style.width=(idx/deck.length*100)+'%';
+}
+
+function answer(chosen){
+  if(done)return;
+  done=true;
+  const it=deck[idx];
+  const ok=chosen===it.c;
+  stats[it.c].t++;
+  const card=document.getElementById('card');
+  const fb=document.getElementById('fb');
+  const btnMap={g:'bg',i:'bi',b:'bb'};
+  ['bg','bi','bb'].forEach(id=>document.getElementById(id).disabled=true);
+  document.getElementById(btnMap[chosen]).classList.add(ok?'s-ok':'s-err');
+  if(!ok) document.getElementById(btnMap[it.c]).classList.add('reveal');
+
+  if(ok){
+    cor++;streak++;maxStreak=Math.max(maxStreak,streak);stats[it.c].c++;
+    card.classList.add('ok','anim-ok');
+    fb.className='fb ok show';
+    fb.innerHTML=`
+      <div class="fb-section"><div class="fb-label">✅ ¡Correcto!</div></div>
+      <hr class="fb-divider">
+      <div class="fb-section"><div class="fb-label">📋 Regla</div>${cleanRule(it.ex)}</div>
+      <hr class="fb-divider">
+      <div class="fb-section"><div class="fb-label">💬 Ejemplo</div>${it.eg}</div>`;
+    updateCombo();
+  } else {
+    streak=0;missedWords.add(it.w);
+    card.classList.add('err','anim-err');
+    fb.className='fb err show';
+    fb.innerHTML=`
+      <div class="fb-section"><div class="fb-label">❌ Incorrecto — Respuesta correcta: <strong style="color:${CAT[it.c].col}">${CAT[it.c].label}</strong></div></div>
+      <hr class="fb-divider">
+      <div class="fb-section"><div class="fb-label">📋 Regla</div>${cleanRule(it.ex)}</div>
+      <hr class="fb-divider">
+      <div class="fb-section"><div class="fb-label">💬 Ejemplo correcto</div>${it.eg}</div>`;
+    document.getElementById('combo').textContent='';
+  }
+  document.getElementById('cor').textContent=cor;
+  document.getElementById('str').textContent=streak;
+  const nxt=document.getElementById('nxt');
+  nxt.textContent=idx<deck.length-1?'Siguiente →':'🏁 Ver resultados';
+  nxt.classList.add('show');
+}
+
+function next(){
+  idx++;
+  if(idx>=deck.length)showResults();
+  else render();
+}
+
+function updateCombo(){
+  const el=document.getElementById('combo');
+  if(streak>=10)el.textContent=`🔥🔥🔥 ¡RACHA DE ${streak}! ¡IMPARABLE!`;
+  else if(streak>=7)el.textContent=`🔥🔥 ¡Racha de ${streak}! ¡Brillante!`;
+  else if(streak>=5)el.textContent=`🔥 ¡Racha de ${streak}! ¡Genial!`;
+  else if(streak>=3)el.textContent=`⚡ ${streak} seguidas — ¡Bien!`;
+  else el.textContent='';
+}
+
+// ── RESULTS ───────────────────────────────────────────────────────────────────
+function showResults(){
+  document.getElementById('game-screen').style.display='none';
+  const rs=document.getElementById('result-screen');
+  rs.style.display='block';rs.classList.add('show');
+  const pct=Math.round(cor/deck.length*100);
+  const msgs=[
+    [100,'🏆','¡Perfecto! 100%','¡Dominás todas las formas como un nativo!'],
+    [85,'🌟','¡Excelente!','Estás muy cerca de la perfección.'],
+    [70,'😊','¡Muy bien!','Buen nivel B2. Revisá las que fallaste.'],
+    [50,'💪','Buen intento','Seguí practicando. ¡Cada ronda mejora!'],
+    [0,'📚','¡A estudiar!','Repasá la guía y volvé a intentarlo. ¡Tú podés!']
+  ];
+  const [,em,ti,ms]=msgs.find(([t])=>pct>=t);
+  document.getElementById('re').textContent=em;
+  document.getElementById('rt').textContent=ti;
+  document.getElementById('rround').textContent=`Ronda ${roundNum} completada`;
+  document.getElementById('rs').textContent=`${cor} / ${deck.length}`;
+  document.getElementById('rsub').textContent=`${pct}% de aciertos · Racha máxima: ${maxStreak} · ${ms}`;
+  document.getElementById('rcats').innerHTML=Object.entries(stats).map(([k,v])=>{
+    const p=v.t?Math.round(v.c/v.t*100):0;
+    return `<div class="r-cat" style="border-left:3px solid ${CAT[k].col}">${CAT[k].label}<br><strong>${v.c}/${v.t}</strong> (${p}%)</div>`;
+  }).join('');
+
+  // Missed words (unique, only from base ITEMS — ignore retry duplicates)
+  const uniqueMissed=ITEMS.filter(it=>missedWords.has(it.w));
+  const mb=document.getElementById('mbox');
+  if(uniqueMissed.length){
+    mb.style.display='block';
+    document.getElementById('mlist').innerHTML=uniqueMissed.map(it=>
+      `<div class="missed-item"><span>${it.w}</span><span class="missed-cat" style="color:${CAT[it.c].col}">${CAT[it.c].label}</span></div>`
+    ).join('');
+  } else {
+    mb.style.display='none';
+  }
+
+  // Result buttons
+  const btns=document.getElementById('result-btns');
+  if(uniqueMissed.length>0){
+    btns.innerHTML=`
+      <button class="btn-play primary" onclick="nextRound()">🔁 Ronda ${roundNum+1} con refuerzo (${uniqueMissed.length} palabras ×3)</button>
+      <button class="btn-play secondary" onclick="doRestart()">↩ Nueva partida desde cero</button>`;
+  } else {
+    btns.innerHTML=`
+      <button class="btn-play primary" onclick="doRestart()">🎉 ¡Perfecto! Nueva partida</button>`;
+  }
+}
+
+function nextRound(){
+  prevMissedWords=new Set(missedWords);
+  roundNum++;
+  startGame(false);
+}
+
+// ── RESTART ───────────────────────────────────────────────────────────────────
+function confirmRestart(){
+  document.getElementById('overlay').classList.add('show');
+}
+function closeOverlay(){
+  document.getElementById('overlay').classList.remove('show');
+}
+function doRestart(){
+  closeOverlay();
+  roundNum=1;prevMissedWords=new Set();
+  startGame(true);
+}
+
+// ── KEYBOARD ──────────────────────────────────────────────────────────────────
+document.addEventListener('keydown',e=>{
+  if(document.getElementById('overlay').classList.contains('show')){
+    if(e.key==='Escape')closeOverlay();
+    return;
+  }
+  if(['1','2','3'].includes(e.key)&&!done){
+    answer(e.key==='1'?'g':e.key==='2'?'i':'b');
+  } else if((e.key==='Enter'||e.key===' ')&&done){
+    e.preventDefault();next();
+  }
+});
+
+startGame(true);
+</script>
+<footer class="site-footer">
+  <a href="../../">englishstudentgames.com</a> · © 2026 English Student Games
+</footer>
+</body>
+</html>

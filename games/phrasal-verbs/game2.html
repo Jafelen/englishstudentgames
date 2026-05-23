@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<title>Phrasal Verbs — B2 First</title>
+<style>
+  :root{
+    --bg1:#1a1033; --bg2:#3b1d6b; --card:#fff8e7; --ink:#1b1430;
+    --good:#1faa6b; --bad:#d63b3b; --accent:#ffcb3a; --muted:#7a6f8d;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:var(--ink)}
+  body{
+    min-height:100vh;
+    background:radial-gradient(circle at 20% 10%,#5a2e9b 0%,var(--bg2) 35%,var(--bg1) 100%);
+    display:flex;flex-direction:column;align-items:center;padding:18px;
+  }
+  header{color:#fff;text-align:center;margin-bottom:10px}
+  h1{margin:0;font-size:24px;letter-spacing:.5px}
+  .sub{opacity:.8;font-size:13px}
+
+  .hud{
+    display:flex;gap:10px;flex-wrap:wrap;justify-content:center;
+    margin:10px 0 14px;color:#fff;font-size:14px;
+  }
+  .pill{background:rgba(255,255,255,.12);padding:6px 12px;border-radius:999px;backdrop-filter:blur(6px)}
+  .pill b{color:var(--accent)}
+
+  .progress{width:min(720px,95vw);height:10px;background:rgba(255,255,255,.15);border-radius:99px;overflow:hidden;margin-bottom:14px}
+  .progress > div{height:100%;background:linear-gradient(90deg,var(--accent),#ff8a3a);width:0;transition:width .3s}
+
+  .stage{
+    width:min(720px,95vw);
+    perspective:1200px;
+  }
+  .card{
+    background:var(--card);
+    border-radius:22px;
+    padding:26px 24px 18px;
+    box-shadow:0 18px 50px rgba(0,0,0,.45),inset 0 0 0 4px #f0e2bc;
+    position:relative;
+    transform-style:preserve-3d;
+    transition:transform .35s ease, box-shadow .3s;
+  }
+  .card.flash-good{animation:flashGood .55s}
+  .card.flash-bad{animation:flashBad .55s}
+  @keyframes flashGood{0%{box-shadow:0 0 0 0 rgba(31,170,107,.7)}100%{box-shadow:0 18px 50px rgba(0,0,0,.45),inset 0 0 0 4px #f0e2bc}}
+  @keyframes flashBad{0%,100%{transform:translateX(0)}20%{transform:translateX(-9px)}40%{transform:translateX(9px)}60%{transform:translateX(-6px)}80%{transform:translateX(6px)}}
+
+  .meta{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--muted);margin-bottom:6px}
+  .meta .tag{background:#efe3c0;color:#6a4a00;padding:3px 8px;border-radius:99px;font-weight:600}
+
+  .verb{font-size:34px;font-weight:800;letter-spacing:-.5px;margin:6px 0 4px}
+  .def{font-size:17px;color:#3a2c5a;margin:0 0 14px;line-height:1.4}
+  .def em{color:#6a4a00;font-style:normal;font-weight:600}
+
+  .cats{
+    display:grid;grid-template-columns:repeat(2,1fr);gap:10px;
+  }
+  @media(min-width:560px){.cats{grid-template-columns:repeat(3,1fr)}}
+  .cat{
+    cursor:pointer;border:2px solid #e6d6a8;background:#fff;
+    border-radius:14px;padding:12px 10px;font-size:14px;font-weight:600;
+    color:var(--ink);text-align:left;display:flex;gap:8px;align-items:center;
+    transition:transform .12s,border-color .15s,background .15s;
+  }
+  .cat:hover{transform:translateY(-2px);border-color:#b69653;background:#fffaeb}
+  .cat .emo{font-size:20px}
+  .cat[disabled]{opacity:.55;cursor:not-allowed}
+  .cat.is-correct{background:#e1f7ec;border-color:var(--good);color:#0a5e3a}
+  .cat.is-wrong{background:#fde2e2;border-color:var(--bad);color:#7a1a1a}
+
+  .feedback{
+    margin-top:14px;padding:14px;border-radius:14px;font-size:15px;line-height:1.45;
+    display:none;
+  }
+  .feedback.good{display:block;background:#e1f7ec;color:#0a5e3a;border-left:5px solid var(--good)}
+  .feedback.bad{display:block;background:#fde2e2;color:#7a1a1a;border-left:5px solid var(--bad)}
+  .feedback h4{margin:0 0 6px;font-size:14px;letter-spacing:.5px;text-transform:uppercase}
+  .feedback .ex{font-style:italic;margin-top:4px}
+
+  .next{
+    margin-top:12px;display:none;width:100%;padding:12px;border:0;border-radius:12px;
+    background:linear-gradient(90deg,#ff8a3a,var(--accent));font-weight:700;font-size:16px;cursor:pointer;color:#1b1430;
+    box-shadow:0 6px 18px rgba(255,138,58,.4);
+  }
+  .next.show{display:block}
+  .next:hover{filter:brightness(1.05)}
+
+  .end{
+    background:var(--card);border-radius:22px;padding:28px;text-align:center;
+    width:min(620px,95vw);box-shadow:0 18px 50px rgba(0,0,0,.45);
+  }
+  .end h2{margin:0 0 8px}
+  .end .score{font-size:54px;font-weight:800;color:#6a4a00;margin:8px 0}
+  .end button{margin-top:10px;padding:12px 22px;border:0;border-radius:12px;background:#3b1d6b;color:#fff;font-weight:700;cursor:pointer;font-size:15px}
+  .end button:hover{background:#4d2789}
+  .missed{margin-top:14px;text-align:left;font-size:13px;max-height:220px;overflow:auto;background:#fff;border-radius:10px;padding:10px}
+  .missed div{padding:4px 0;border-bottom:1px dashed #eee}
+
+  footer{color:#fff;opacity:.6;font-size:11px;margin-top:18px;text-align:center}
+  .site-header{text-align:center;padding:48px 20px 16px}
+  .site-header h1{font-size:2.6em;margin-bottom:8px;text-shadow:2px 2px 6px rgba(0,0,0,.35);letter-spacing:1px}
+  .site-header .tagline{font-size:1.1em;opacity:.75;max-width:480px;margin:0 auto 10px;line-height:1.5}
+  .site-footer{text-align:center;padding:28px 20px 36px;opacity:.5;font-size:.82em;letter-spacing:.3px}
+  .site-footer a{color:inherit;text-decoration:none}
+  .site-footer a:hover{opacity:.8;text-decoration:underline}
+</style>
+</head>
+<body>
+<header class="site-header">
+  <a href="../../" style="color:inherit;text-decoration:none">
+    <h1>🎮 English Student Games</h1>
+    <p class="tagline">Juegos interactivos para aprender y practicar inglés — diseñados para todas las edades</p>
+  </a>
+</header>
+<header>
+  <h1>🧠 Phrasal Verbs Memory</h1>
+  <div class="sub">Ready for B2 First — clasifica los 95 phrasal verbs en cada ronda</div>
+</header>
+
+<div class="hud">
+  <div class="pill">Progreso <b id="prog">0 / 0</b></div>
+  <div class="pill">Aciertos <b id="ok">0</b></div>
+  <div class="pill">Errores <b id="ko">0</b></div>
+  <div class="pill">Racha 🔥 <b id="streak">0</b></div>
+</div>
+
+<div class="progress"><div id="bar"></div></div>
+
+<div id="app" class="stage"></div>
+
+<footer>Datos: <em>Phrasal verbs list — Ready For B2 First, © Macmillan Education 2021</em></footer>
+
+<script>
+/* === Categorías === */
+const CATS = {
+  PEOPLE:    { id:"PEOPLE",    label:"Personas y Relaciones", emo:"👥" },
+  COMM:      { id:"COMM",      label:"Comunicación e Ideas",  emo:"💭" },
+  MONEY:     { id:"MONEY",     label:"Dinero y Negocios",     emo:"💼" },
+  MOVE:      { id:"MOVE",      label:"Movimiento y Viaje",    emo:"✈️" },
+  LIFE:      { id:"LIFE",      label:"Vida Diaria y Hábitos", emo:"🏠" },
+  BODY:      { id:"BODY",      label:"Cuerpo, Comida y Ropa", emo:"🍽️" },
+};
+
+/* === Phrasal verbs === */
+/* hint = razón breve por la que pertenece a su categoría (se muestra al fallar) */
+const DATA = [
+ {v:"back something up", d:"support an explanation", c:"COMM", ex:"She backed up her theory with solid data.", h:"se trata de respaldar una idea o explicación con argumentos."},
+ {v:"bolt something down", d:"eat something very quickly", c:"BODY", ex:"He bolted down his lunch and ran to the meeting.", h:"describe la acción física de comer."},
+ {v:"bring someone up", d:"take care of a child until they become an adult", c:"PEOPLE", ex:"She was brought up by her grandparents.", h:"trata de la crianza de una persona."},
+ {v:"bring something about", d:"cause", c:"COMM", ex:"The new law brought about huge social change.", h:"se refiere a provocar una idea, cambio o resultado abstracto."},
+ {v:"carry on (doing) something", d:"continue", c:"LIFE", ex:"Just carry on working, I'll be quiet.", h:"describe seguir con una rutina o actividad cotidiana."},
+ {v:"carry out something", d:"do some work or research", c:"LIFE", ex:"They carried out a survey of 500 students.", h:"se refiere a ejecutar una tarea o trabajo."},
+ {v:"catch on (popular)", d:"become popular or fashionable", c:"LIFE", ex:"The trend caught on quickly among teenagers.", h:"describe cómo una moda entra en la vida diaria."},
+ {v:"catch on (understand)", d:"begin to understand", c:"COMM", ex:"It took me a while to catch on to the joke.", h:"se trata de comprender una idea."},
+ {v:"catch up on something", d:"do something that you didn't do enough of before", c:"LIFE", ex:"I need to catch up on sleep this weekend.", h:"describe ponerse al día con hábitos o rutinas."},
+ {v:"cheer (someone) up", d:"become/make someone less sad", c:"PEOPLE", ex:"I bought her flowers to cheer her up.", h:"afecta el estado emocional de una persona."},
+ {v:"come across something/someone", d:"find/meet something/someone by chance", c:"LIFE", ex:"I came across an old photo while cleaning.", h:"un encuentro casual en la vida cotidiana."},
+ {v:"come over", d:"visit someone in their house", c:"MOVE", ex:"Come over for dinner on Saturday.", h:"implica desplazamiento físico hacia un lugar."},
+ {v:"come up with something", d:"think of", c:"COMM", ex:"She came up with a brilliant solution.", h:"describe generar una idea."},
+ {v:"draw something up", d:"prepare and write (a plan)", c:"COMM", ex:"The lawyer drew up the contract.", h:"se trata de redactar/preparar un documento o plan."},
+ {v:"fall out with someone", d:"stop being friendly after an argument", c:"PEOPLE", ex:"He fell out with his best friend over money.", h:"describe una ruptura entre personas."},
+ {v:"find something out", d:"discover", c:"COMM", ex:"I found out the truth yesterday.", h:"se refiere a descubrir información."},
+ {v:"get about (a place)", d:"travel around", c:"MOVE", ex:"It's easy to get about Rome on foot.", h:"trata de moverse por un lugar."},
+ {v:"get away with something", d:"do something bad without being punished", c:"LIFE", ex:"He cheated on the test and got away with it.", h:"describe un comportamiento cotidiano sin consecuencias."},
+ {v:"get by", d:"manage to survive/live", c:"LIFE", ex:"They get by on a small income.", h:"describe cómo se vive el día a día."},
+ {v:"get on with someone", d:"have a good relationship", c:"PEOPLE", ex:"I get on really well with my sister-in-law.", h:"describe una relación entre personas."},
+ {v:"get over something", d:"recover from", c:"LIFE", ex:"It took her months to get over the flu.", h:"describe superar algo en la vida diaria."},
+ {v:"give away information", d:"tell secret information", c:"COMM", ex:"Don't give away the ending of the film!", h:"trata de revelar información."},
+ {v:"give homework in", d:"hand homework to the teacher", c:"LIFE", ex:"Please give your homework in by Friday.", h:"es una rutina escolar."},
+ {v:"give in (to requests)", d:"agree after initial resistance", c:"PEOPLE", ex:"After hours of begging, she gave in.", h:"describe ceder ante otra persona."},
+ {v:"give oneself up", d:"allow oneself to be arrested", c:"LIFE", ex:"The thief gave himself up to the police.", h:"un acto cotidiano (entregarse), no comunicación."},
+ {v:"give out books/paper", d:"distribute to several people", c:"LIFE", ex:"The teacher gave out the exam papers.", h:"describe repartir objetos físicamente."},
+ {v:"give out information", d:"give information to a lot of people", c:"COMM", ex:"They gave out details of the new policy.", h:"trata de difundir información."},
+ {v:"give something back", d:"return something", c:"LIFE", ex:"Can you give me back my pen?", h:"acción cotidiana de devolver."},
+ {v:"give something up", d:"stop doing something you do regularly", c:"LIFE", ex:"He gave up smoking last year.", h:"describe abandonar un hábito."},
+ {v:"go in for (a competition)", d:"enter a competition", c:"LIFE", ex:"She's going in for the photography contest.", h:"es inscribirse en una actividad."},
+ {v:"go on (happen)", d:"happen", c:"LIFE", ex:"What's going on in there?", h:"describe sucesos cotidianos."},
+ {v:"go on (with something)", d:"continue", c:"LIFE", ex:"Go on with your story.", h:"continuar una actividad diaria."},
+ {v:"go round", d:"visit a person or place", c:"MOVE", ex:"Let's go round to grandma's house.", h:"implica desplazarse a un lugar."},
+ {v:"grow up", d:"change from child to adult", c:"PEOPLE", ex:"I grew up in a small village.", h:"describe la etapa vital de una persona."},
+ {v:"gulp something down", d:"drink something very quickly", c:"BODY", ex:"She gulped down her coffee and left.", h:"acción física de beber."},
+ {v:"head for somewhere", d:"go somewhere", c:"MOVE", ex:"Let's head for the beach.", h:"describe dirigirse a un lugar."},
+ {v:"hit it off with someone", d:"like each other on first meeting", c:"PEOPLE", ex:"We hit it off the moment we met.", h:"describe la química entre personas."},
+ {v:"kick someone out", d:"force someone to leave; expel", c:"PEOPLE", ex:"He was kicked out of the club for fighting.", h:"acción contra una persona."},
+ {v:"let someone down", d:"disappoint", c:"PEOPLE", ex:"Don't let me down again.", h:"afecta emocionalmente a alguien."},
+ {v:"look forward to something", d:"feel happy about something coming", c:"LIFE", ex:"I'm looking forward to the weekend.", h:"emoción asociada a un evento futuro de la vida."},
+ {v:"look up to someone", d:"admire and respect", c:"PEOPLE", ex:"He's always looked up to his older brother.", h:"actitud hacia una persona."},
+ {v:"make something up", d:"invent an explanation", c:"COMM", ex:"He made up an excuse for being late.", h:"trata de inventar/comunicar algo no real."},
+ {v:"make up one's mind", d:"decide", c:"COMM", ex:"I can't make up my mind which to buy.", h:"es un proceso mental."},
+ {v:"move on to something", d:"stop discussing X and start Y", c:"COMM", ex:"Let's move on to the next topic.", h:"trata del flujo de una conversación."},
+ {v:"open up to someone", d:"talk about your personal feelings", c:"PEOPLE", ex:"It took years for him to open up to me.", h:"describe abrirse emocionalmente con alguien."},
+ {v:"own up to something", d:"admit you did something wrong", c:"COMM", ex:"He finally owned up to breaking the vase.", h:"trata de confesar/comunicar la verdad."},
+ {v:"pick up (a bargain)", d:"buy something cheap", c:"MONEY", ex:"I picked up a bargain at the market.", h:"acción de compra."},
+ {v:"push something up", d:"make something increase", c:"MONEY", ex:"The drought pushed up food prices.", h:"normalmente refiere a precios o cifras."},
+ {v:"put clothes on", d:"place clothes on your body", c:"BODY", ex:"Put your coat on, it's cold.", h:"acción física con la ropa."},
+ {v:"put on an event", d:"organise an event", c:"LIFE", ex:"The school put on a wonderful play.", h:"organizar algo cotidiano."},
+ {v:"put prices up", d:"increase prices", c:"MONEY", ex:"They put prices up by 5% last month.", h:"trata directamente del dinero."},
+ {v:"put someone off (distract)", d:"distract someone", c:"PEOPLE", ex:"Stop talking, you're putting me off!", h:"afecta la concentración de otra persona."},
+ {v:"put someone off something", d:"discourage someone", c:"PEOPLE", ex:"That bad meal put me off seafood for years.", h:"influye en las preferencias de una persona."},
+ {v:"put someone up (for the night)", d:"accommodate someone", c:"PEOPLE", ex:"Can you put me up for a few nights?", h:"es alojar a alguien."},
+ {v:"put something off", d:"postpone", c:"LIFE", ex:"We had to put off the meeting until Monday.", h:"acción cotidiana sobre planes."},
+ {v:"put something together", d:"produce by combining things", c:"COMM", ex:"She put together a great presentation.", h:"se trata de elaborar/crear algo (idea, proyecto)."},
+ {v:"put music on", d:"get something ready to listen to", c:"LIFE", ex:"Put some music on, please.", h:"acción cotidiana del hogar."},
+ {v:"put up with something/someone", d:"tolerate", c:"PEOPLE", ex:"I can't put up with his attitude anymore.", h:"trata de tolerar a alguien o algo."},
+ {v:"put weight on", d:"gain weight", c:"BODY", ex:"I've put on weight over the holidays.", h:"cambio físico del cuerpo."},
+ {v:"put your hand up", d:"raise your hand into the air", c:"BODY", ex:"Put your hand up if you know the answer.", h:"movimiento físico del cuerpo."},
+ {v:"run into (thousands of pounds)", d:"reach a particular number/amount", c:"MONEY", ex:"The repair bill ran into thousands.", h:"se refiere a cantidades de dinero."},
+ {v:"run out of something", d:"use all of something so none is left", c:"LIFE", ex:"We've run out of milk.", h:"acción cotidiana del hogar."},
+ {v:"sell out of something", d:"sell all of something", c:"MONEY", ex:"They sold out of tickets in an hour.", h:"acción comercial."},
+ {v:"set off for somewhere", d:"start going somewhere", c:"MOVE", ex:"We set off for Paris at dawn.", h:"inicio de un viaje."},
+ {v:"set something up", d:"start a business", c:"MONEY", ex:"She set up her own consulting firm.", h:"creación de un negocio."},
+ {v:"set up home", d:"begin living in a place", c:"LIFE", ex:"They set up home in a small cottage.", h:"establecerse en un hogar."},
+ {v:"settle down", d:"live quieter, stay in one place, perhaps marry", c:"LIFE", ex:"After years of travel, he settled down.", h:"etapa de vida tranquila/cotidiana."},
+ {v:"show off", d:"behave to attract admiration", c:"PEOPLE", ex:"He's always showing off in front of girls.", h:"comportamiento dirigido a otras personas."},
+ {v:"sign up for something", d:"agree to do; book", c:"LIFE", ex:"I signed up for a yoga class.", h:"inscribirse en una actividad rutinaria."},
+ {v:"sort out a problem", d:"solve a problem", c:"COMM", ex:"We need to sort out this issue today.", h:"resolver requiere razonamiento/comunicación."},
+ {v:"split up with someone", d:"end a romantic relationship", c:"PEOPLE", ex:"They split up after ten years together.", h:"ruptura entre personas."},
+ {v:"stand out", d:"be easy to notice", c:"LIFE", ex:"Her red dress made her stand out.", h:"característica perceptible en lo cotidiano."},
+ {v:"take after someone", d:"resemble", c:"PEOPLE", ex:"She takes after her mother.", h:"parecido entre personas."},
+ {v:"take off (success)", d:"start to become successful", c:"MONEY", ex:"The startup really took off last year.", h:"éxito de un negocio."},
+ {v:"take over", d:"gain control", c:"MONEY", ex:"A bigger company took over the firm.", h:"contexto empresarial."},
+ {v:"take someone aside", d:"move someone away to talk", c:"PEOPLE", ex:"The manager took her aside for a chat.", h:"interacción con una persona."},
+ {v:"take someone on", d:"employ someone", c:"MONEY", ex:"They took on twenty new staff.", h:"contratación laboral."},
+ {v:"take something back", d:"return something", c:"LIFE", ex:"I took the shirt back to the shop.", h:"acción cotidiana de devolución."},
+ {v:"take something in", d:"accept something as true", c:"COMM", ex:"It's a lot of news to take in.", h:"procesamiento mental de información."},
+ {v:"take to something/someone", d:"start to like", c:"PEOPLE", ex:"The kids took to their new teacher right away.", h:"sentimiento hacia alguien o algo."},
+ {v:"take up a new sport/hobby", d:"start doing a new hobby", c:"LIFE", ex:"I've taken up painting recently.", h:"nuevo hábito en la vida."},
+ {v:"tell someone off", d:"criticise someone angrily", c:"PEOPLE", ex:"The teacher told him off for shouting.", h:"interacción crítica con una persona."},
+ {v:"try something on", d:"put on clothing to see how it fits", c:"BODY", ex:"Can I try this jacket on?", h:"probarse ropa."},
+ {v:"turn out (event)", d:"go somewhere to take part in an event", c:"MOVE", ex:"Thousands turned out for the parade.", h:"acudir físicamente a un evento."},
+ {v:"turn out (be a success)", d:"become a success", c:"LIFE", ex:"The party turned out to be a great success.", h:"resultado en la vida cotidiana."},
+ {v:"turn out (well/badly)", d:"end well/badly", c:"LIFE", ex:"Everything turned out well in the end.", h:"resultado de eventos cotidianos."},
+ {v:"turn something down", d:"reject something", c:"COMM", ex:"She turned down the job offer.", h:"comunicar una negativa."},
+ {v:"turn something into", d:"make something change into something different", c:"LIFE", ex:"They turned the garage into a studio.", h:"transformación de un objeto/lugar cotidiano."},
+ {v:"turn to someone", d:"go to someone for help", c:"PEOPLE", ex:"She turned to her sister for advice.", h:"buscar apoyo en una persona."},
+ {v:"turn up", d:"arrive", c:"MOVE", ex:"He turned up two hours late.", h:"llegada a un lugar."},
+ {v:"work something out", d:"manage to understand", c:"COMM", ex:"I can't work out what she means.", h:"proceso mental de entender."},
+];
+
+/* === Estado === */
+const $ = sel => document.querySelector(sel);
+const app = $("#app");
+let queue = [];
+let current = null;
+let stats = {ok:0, ko:0, streak:0, best:0, total:DATA.length, idx:0, missed:[]};
+
+function shuffle(a){
+  for(let i=a.length-1;i>0;i--){
+    const j=(Math.random()*(i+1))|0;
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+  return a;
+}
+
+function newRound(){
+  queue = shuffle([...DATA]);
+  stats = {ok:0, ko:0, streak:0, best:0, total:DATA.length, idx:0, missed:[]};
+  next();
+}
+
+function updateHud(){
+  $("#prog").textContent = `${stats.idx} / ${stats.total}`;
+  $("#ok").textContent = stats.ok;
+  $("#ko").textContent = stats.ko;
+  $("#streak").textContent = stats.streak;
+  $("#bar").style.width = (100*stats.idx/stats.total)+"%";
+}
+
+function next(){
+  if(!queue.length){ return endRound(); }
+  current = queue.shift();
+  stats.idx = stats.total - queue.length;
+  updateHud();
+  render();
+}
+
+function render(){
+  const catBtns = Object.values(CATS).map(c=>`
+    <button class="cat" data-id="${c.id}">
+      <span class="emo">${c.emo}</span><span>${c.label}</span>
+    </button>`).join("");
+  app.innerHTML = `
+    <div class="card" id="card">
+      <div class="meta">
+        <span>Carta ${stats.idx} de ${stats.total}</span>
+        <span class="tag">¿A qué grupo pertenece?</span>
+      </div>
+      <div class="verb">${current.v}</div>
+      <div class="def"><em>Significado:</em> ${current.d}</div>
+      <div class="cats">${catBtns}</div>
+      <div class="feedback" id="fb"></div>
+      <button class="next" id="nx">Siguiente carta →</button>
+    </div>`;
+  app.querySelectorAll(".cat").forEach(b=>b.addEventListener("click",()=>answer(b.dataset.id, b)));
+  $("#nx").addEventListener("click", next);
+}
+
+function answer(picked, btn){
+  app.querySelectorAll(".cat").forEach(b=>b.disabled=true);
+  const card = $("#card"), fb = $("#fb"), nx = $("#nx");
+  const correctCat = CATS[current.c];
+  const pickedCat  = CATS[picked];
+
+  if(picked === current.c){
+    stats.ok++; stats.streak++; stats.best = Math.max(stats.best,stats.streak);
+    btn.classList.add("is-correct");
+    card.classList.add("flash-good");
+    fb.className = "feedback good";
+    fb.innerHTML = `
+      <h4>✅ ¡Correcto! +1</h4>
+      <div><b>${current.v}</b> — ${current.d}</div>
+      <div class="ex">📝 <b>Ejemplo:</b> "${current.ex}"</div>`;
+  } else {
+    stats.ko++; stats.streak = 0;
+    stats.missed.push(current);
+    btn.classList.add("is-wrong");
+    app.querySelector(`.cat[data-id="${current.c}"]`).classList.add("is-correct");
+    card.classList.add("flash-bad");
+    fb.className = "feedback bad";
+    fb.innerHTML = `
+      <h4>❌ No es ${pickedCat.emo} ${pickedCat.label}</h4>
+      <div>La categoría correcta es <b>${correctCat.emo} ${correctCat.label}</b>.</div>
+      <div style="margin-top:6px"><b>${current.v}</b> significa <em>${current.d}</em> — ${current.h}</div>
+      <div class="ex" style="margin-top:6px">📝 Ejemplo: "${current.ex}"</div>`;
+  }
+  nx.classList.add("show");
+  updateHud();
+}
+
+function endRound(){
+  const pct = Math.round(100*stats.ok/stats.total);
+  const grade = pct>=95?"🏆 ¡Maestro!":pct>=80?"🎉 ¡Excelente!":pct>=60?"👍 Bien":pct>=40?"💪 A practicar":"📚 ¡A repasar!";
+  const missedHtml = stats.missed.length
+    ? `<div class="missed"><b>Para repasar (${stats.missed.length}):</b>${stats.missed.map(m=>`<div><b>${m.v}</b> → ${CATS[m.c].emo} ${CATS[m.c].label} <span style="color:#888">(${m.d})</span></div>`).join("")}</div>`
+    : `<div class="missed" style="text-align:center;color:#0a5e3a"><b>¡Sin errores! 🎯</b></div>`;
+  app.innerHTML = `
+    <div class="end">
+      <h2>${grade}</h2>
+      <div class="score">${stats.ok} / ${stats.total}</div>
+      <div>Mejor racha: 🔥 <b>${stats.best}</b> · Errores: <b>${stats.ko}</b> · Acierto: <b>${pct}%</b></div>
+      <button id="again">Jugar otra ronda 🔁</button>
+      ${missedHtml}
+    </div>`;
+  $("#again").addEventListener("click", newRound);
+  $("#bar").style.width="100%";
+}
+
+newRound();
+</script>
+<footer class="site-footer">
+  <a href="../../">englishstudentgames.com</a> · © 2026 English Student Games
+</footer>
+</body>
+</html>
