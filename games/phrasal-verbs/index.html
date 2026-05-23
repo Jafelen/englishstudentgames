@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Phrasal Verbs — B2 First | English Student Games</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    min-height: 100vh;
+    color: #fff;
+    padding: 20px;
+  }
+  .container { max-width: 900px; margin: 0 auto; }
+  h1 { text-align: center; font-size: 1.9em; margin-bottom: 6px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+  .subtitle { text-align: center; opacity: 0.85; margin-bottom: 18px; font-size: 0.92em; }
+
+  .game-nav {
+    text-align: center;
+    margin-bottom: 16px;
+  }
+  .game-nav a {
+    color: rgba(255,255,255,0.7);
+    text-decoration: none;
+    font-size: 0.9em;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: color 0.2s;
+  }
+  .game-nav a:hover { color: #fff; }
+
+  .stats {
+    display: flex; justify-content: space-around;
+    background: rgba(255,255,255,0.1); padding: 14px;
+    border-radius: 12px; margin-bottom: 18px; backdrop-filter: blur(8px);
+  }
+  .stat { text-align: center; }
+  .stat-label { font-size: 0.7em; opacity: 0.8; text-transform: uppercase; letter-spacing: 0.5px; }
+  .stat-value { font-size: 1.5em; font-weight: bold; }
+
+  .progress-bar { height: 8px; background: rgba(255,255,255,0.2); border-radius: 4px; overflow: hidden; margin-bottom: 18px; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, #ffd200, #ff6b6b); width: 0%; transition: width 0.4s ease; }
+
+  .mode-tag {
+    display: inline-block; background: rgba(255,255,255,0.2);
+    padding: 4px 12px; border-radius: 20px; font-size: 0.75em;
+    margin-bottom: 10px; letter-spacing: 0.5px;
+  }
+
+  .card {
+    background: rgba(255,255,255,0.97); color: #1e3c72;
+    border-radius: 18px; padding: 28px 22px; text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3); margin-bottom: 18px;
+    min-height: 150px; display: flex; flex-direction: column; justify-content: center;
+    animation: flipIn 0.45s ease;
+  }
+  @keyframes flipIn { from { transform: rotateY(90deg); opacity: 0; } to { transform: rotateY(0); opacity: 1; } }
+
+  .question-prompt { font-size: 0.85em; color: #777; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
+  .pv-text { font-size: 2.1em; font-weight: bold; color: #1e3c72; }
+  .meaning-text { font-size: 1.5em; font-style: italic; color: #2d3436; line-height: 1.4; }
+  .example-text { font-size: 1.25em; color: #2d3436; line-height: 1.5; }
+  .blank { display: inline-block; min-width: 110px; border-bottom: 3px solid #ff6b6b; padding: 0 8px; font-weight: bold; color: #ff6b6b; }
+
+  .options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+  @media (max-width: 600px) { .options { grid-template-columns: 1fr; } }
+  .opt-btn {
+    padding: 14px 16px; border: 2px solid rgba(255,255,255,0.3);
+    border-radius: 12px; font-size: 0.98em;
+    background: rgba(255,255,255,0.95); color: #1e3c72;
+    cursor: pointer; text-align: left; line-height: 1.35;
+    transition: transform 0.15s, box-shadow 0.15s, background 0.2s;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  }
+  .opt-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 16px rgba(0,0,0,0.3); }
+  .opt-btn:disabled { cursor: not-allowed; }
+  .opt-btn.correct-ans { background: #00b894; color: #fff; border-color: #00b894; }
+  .opt-btn.wrong-ans   { background: #d63031; color: #fff; border-color: #d63031; }
+  .opt-btn.faded       { opacity: 0.45; }
+
+  .feedback {
+    background: rgba(255,255,255,0.97); color: #222;
+    border-radius: 14px; padding: 18px; margin-bottom: 14px;
+    border-left: 6px solid #888; animation: fadeIn 0.3s ease;
+  }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+  .feedback.correct { border-left-color: #00b894; }
+  .feedback.wrong   { border-left-color: #d63031; }
+  .feedback h3 { margin-bottom: 8px; font-size: 1.05em; }
+  .feedback p { margin-bottom: 6px; line-height: 1.5; }
+  .feedback .example {
+    font-style: italic; color: #1e3c72; background:#fff5d6;
+    padding: 10px 14px; border-radius: 8px; margin-top: 10px;
+    border-left: 4px solid #ffd200; font-size: 1.05em;
+  }
+  .feedback .example b { background: #ffd200; padding: 1px 5px; border-radius: 3px; color: #1e3c72; }
+  .feedback .meaning { color:#555; }
+  .requeue-note { font-size: 0.85em; color: #d63031; margin-top: 8px; font-weight: bold; }
+
+  .next-btn, .start-btn, .restart-btn {
+    width: 100%; padding: 14px;
+    background: linear-gradient(135deg, #ffd200, #ff6b6b);
+    color: #fff; border: none; border-radius: 12px;
+    font-size: 1.05em; font-weight: bold; cursor: pointer;
+    box-shadow: 0 6px 14px rgba(0,0,0,0.3);
+    transition: transform 0.15s;
+  }
+  .next-btn:hover, .start-btn:hover, .restart-btn:hover { transform: translateY(-2px); }
+
+  .hidden { display: none !important; }
+
+  .summary { background: rgba(255,255,255,0.97); color: #222; border-radius: 16px; padding: 24px; margin-bottom: 14px; }
+  .summary h2 { color: #1e3c72; margin-bottom: 12px; text-align: center; }
+  .summary .big { font-size: 2.4em; text-align:center; color:#00b894; font-weight: bold; margin: 10px 0; }
+  .review-block { margin-top: 18px; max-height: 320px; overflow-y: auto; }
+  .review-item {
+    background: #f8f9fc; padding: 10px 12px; border-radius: 8px;
+    margin-bottom: 7px; font-size: 0.92em; border-left: 3px solid #6c5ce7;
+  }
+  .review-item .pv { font-weight: bold; color: #1e3c72; }
+  .review-item .ex { font-style: italic; color: #555; font-size: 0.9em; margin-top: 3px; }
+
+  .intro-card { background: rgba(255,255,255,0.97); color: #222; border-radius: 16px; padding: 22px; margin-bottom: 14px; line-height: 1.55; }
+  .intro-card h3 { color: #1e3c72; margin-bottom: 8px; }
+  .intro-card ul { margin: 8px 0 8px 22px; }
+  .intro-card .mode { background: #f0f3f7; padding: 8px 12px; border-radius: 8px; margin: 6px 0; }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="game-nav"><a href="../../">← Volver al portal</a></div>
+  <h1>🧠 Phrasal Verbs — Memorización</h1>
+  <div class="subtitle">B2 First · 92 phrasal verbs · cada ronda los ves todos</div>
+
+  <div id="start-screen">
+    <div class="intro-card">
+      <h3>🎯 Objetivo</h3>
+      <p>Memorizar el significado de cada phrasal verb a través de un ejemplo de uso real.</p>
+      <h3 style="margin-top:14px;">🎮 Cómo se juega</h3>
+      <p>El juego mezcla 3 modos para reforzar la memoria:</p>
+      <div class="mode">📖 <b>Modo Significado</b> — te muestro el phrasal verb, eliges qué significa.</div>
+      <div class="mode">✏️ <b>Modo Hueco</b> — te muestro un ejemplo con un hueco, eliges el phrasal verb correcto.</div>
+      <div class="mode">🔄 <b>Modo Inverso</b> — te muestro el significado, eliges el phrasal verb.</div>
+      <h3 style="margin-top:14px;">🔁 Mecánica de repetición</h3>
+      <ul>
+        <li>✅ <b>Acierto</b> → te muestro el ejemplo y avanzas.</li>
+        <li>❌ <b>Error</b> → te explico el significado y el phrasal verb <b>vuelve al final de la cola</b>.</li>
+        <li>La ronda solo termina cuando aciertas <b>los 92</b> al menos una vez.</li>
+      </ul>
+    </div>
+    <button class="start-btn" onclick="startGame()">🎮 Empezar ronda</button>
+  </div>
+
+  <div id="game-screen" class="hidden">
+    <div class="stats">
+      <div class="stat"><div class="stat-label">Aprendidos</div><div class="stat-value"><span id="learned">0</span>/<span id="total">0</span></div></div>
+      <div class="stat"><div class="stat-label">En cola</div><div class="stat-value" id="queue-count">0</div></div>
+      <div class="stat"><div class="stat-label">Errores</div><div class="stat-value" id="wrong-count">0</div></div>
+      <div class="stat"><div class="stat-label">Racha</div><div class="stat-value" id="streak">0</div></div>
+      <div class="stat"><div class="stat-label">Tiempo</div><div class="stat-value" id="timer">0:00</div></div>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+
+    <div style="text-align:center;"><span class="mode-tag" id="mode-tag">MODO</span></div>
+    <div class="card" id="card">
+      <div class="question-prompt" id="prompt">—</div>
+      <div id="question-content">—</div>
+    </div>
+
+    <div class="options" id="options"></div>
+
+    <div id="feedback" class="hidden"></div>
+    <button class="next-btn hidden" id="next-btn" onclick="nextCard()">Siguiente ➡️</button>
+  </div>
+
+  <div id="end-screen" class="hidden">
+    <div class="summary">
+      <h2>🏁 ¡Ronda completada!</h2>
+      <div class="big" id="final-score">100%</div>
+      <p style="text-align:center;">
+        Tiempo: <b id="final-time">0:00</b> ·
+        Total intentos: <b id="final-attempts">0</b> ·
+        Errores: <b id="final-wrong">0</b>
+      </p>
+      <div class="review-block" id="review-block"></div>
+    </div>
+    <button class="restart-btn" onclick="startGame()">🔄 Jugar otra ronda</button>
+    <div class="game-nav" style="margin-top:12px;"><a href="../../">← Volver al portal</a></div>
+  </div>
+</div>
+
+<script>
+// Cada ejemplo lleva la forma conjugada correctamente del phrasal verb entre {{...}}
+const PHRASAL_VERBS = [
+  { pv: "bring someone up", meaning: "criar a un niño hasta que es adulto", example: "She was {{brought up}} by her grandparents in a small village." },
+  { pv: "cheer someone up", meaning: "animar / alegrar a alguien", example: "I bought her flowers to {{cheer her up}} after the bad news." },
+  { pv: "fall out with someone", meaning: "pelearse y dejar de hablarse", example: "He {{fell out with}} his best friend over a silly argument." },
+  { pv: "get on with someone", meaning: "llevarse bien con alguien", example: "I {{get on}} really well with my new colleagues." },
+  { pv: "hit it off with someone", meaning: "caer bien al primer encuentro", example: "We {{hit it off}} immediately at the conference." },
+  { pv: "kick someone out", meaning: "echar a alguien de un lugar/organización", example: "He was {{kicked out}} of school for cheating." },
+  { pv: "let someone down", meaning: "decepcionar a alguien", example: "Don't worry, I won't {{let you down}} this time." },
+  { pv: "look up to someone", meaning: "admirar y respetar a alguien", example: "She has always {{looked up to}} her older sister." },
+  { pv: "open up to someone", meaning: "abrirse y contar tus sentimientos", example: "It took him months to {{open up to}} his therapist." },
+  { pv: "put up with something", meaning: "tolerar / aguantar algo o alguien", example: "I can't {{put up with}} his rudeness any longer." },
+  { pv: "split up with someone", meaning: "terminar una relación de pareja", example: "They {{split up}} after five years together." },
+  { pv: "take after someone", meaning: "parecerse a un familiar", example: "She really {{takes after}} her mother in personality." },
+  { pv: "take someone aside", meaning: "apartar a alguien para hablar a solas", example: "The teacher {{took him aside}} to discuss his behaviour." },
+  { pv: "take someone on", meaning: "contratar a alguien", example: "The company is {{taking on}} twenty new members of staff this year." },
+  { pv: "take to someone", meaning: "empezar a gustarte alguien o algo", example: "The children {{took to}} their new nanny straight away." },
+  { pv: "tell someone off", meaning: "regañar a alguien", example: "My boss {{told me off}} for being late again." },
+  { pv: "turn to someone", meaning: "acudir a alguien por ayuda", example: "Whenever I'm worried, I {{turn to}} my sister for advice." },
+  { pv: "come over", meaning: "visitar a alguien (en su casa)", example: "Why don't you {{come over}} for dinner tonight?" },
+  { pv: "go round", meaning: "visitar a una persona o lugar", example: "I'm {{going round}} to Sarah's house after work." },
+  { pv: "put someone up", meaning: "alojar a alguien en tu casa", example: "Could you {{put me up}} for a couple of nights?" },
+  { pv: "put someone off", meaning: "distraer a alguien", example: "Stop talking — you're {{putting me off}}!" },
+  { pv: "put someone off something", meaning: "desanimar a alguien de algo", example: "That horror film {{put me off}} watching scary movies." },
+  { pv: "show off", meaning: "presumir / lucirse para llamar la atención", example: "He's always {{showing off}} his expensive watches." },
+  { pv: "own up to something", meaning: "admitir / confesar algo malo que has hecho", example: "Nobody {{owned up to}} breaking the window." },
+  { pv: "give oneself up", meaning: "entregarse (a la policía)", example: "After three days on the run, the thief {{gave himself up}}." },
+  { pv: "back something up", meaning: "respaldar una explicación con pruebas", example: "She {{backed up}} her argument with solid statistics." },
+  { pv: "catch on", meaning: "empezar a entender algo", example: "It took me a while to {{catch on}} to the joke." },
+  { pv: "come across something", meaning: "encontrar algo o a alguien por casualidad", example: "I {{came across}} an old photo while cleaning the attic." },
+  { pv: "come up with something", meaning: "ocurrírsete / pensar en algo", example: "She {{came up with}} a brilliant idea for the project." },
+  { pv: "find something out", meaning: "descubrir / averiguar", example: "I {{found out}} that the meeting had been cancelled." },
+  { pv: "give away information", meaning: "revelar información que debía ser secreta", example: "Don't {{give away}} the ending of the film!" },
+  { pv: "give out information", meaning: "difundir información a mucha gente", example: "The police {{gave out}} a description of the suspect." },
+  { pv: "make up one's mind", meaning: "decidirse", example: "I can't {{make up my mind}} whether to accept the job." },
+  { pv: "make something up", meaning: "inventar una explicación", example: "He {{made up}} a ridiculous excuse for being late." },
+  { pv: "sort out a problem", meaning: "resolver un problema", example: "We need to {{sort out}} this billing problem today." },
+  { pv: "take something in", meaning: "asimilar / aceptar algo como cierto", example: "The news was so shocking I couldn't {{take it in}}." },
+  { pv: "work something out", meaning: "lograr entender / resolver", example: "I can't {{work out}} why my code isn't running." },
+  { pv: "carry on", meaning: "continuar haciendo algo", example: "Please {{carry on}} with what you were doing." },
+  { pv: "catch up on something", meaning: "recuperar lo que no hiciste antes", example: "I need to {{catch up on}} some sleep this weekend." },
+  { pv: "get about", meaning: "moverse / viajar por un lugar", example: "It's easy to {{get about}} Amsterdam by bike." },
+  { pv: "get by", meaning: "arreglárselas / sobrevivir con poco", example: "We can just about {{get by}} on my salary." },
+  { pv: "get over something", meaning: "superar / recuperarse de algo", example: "It took her months to {{get over}} the breakup." },
+  { pv: "go on", meaning: "suceder / ocurrir", example: "What's {{going on}} in here? Why is everyone shouting?" },
+  { pv: "grow up", meaning: "crecer / hacerse adulto", example: "I {{grew up}} in a small town near the coast." },
+  { pv: "head for somewhere", meaning: "dirigirse a un lugar", example: "After work, we {{headed for}} the nearest pub." },
+  { pv: "look forward to something", meaning: "tener ilusión por algo que va a pasar", example: "I'm really {{looking forward to}} my holiday next month." },
+  { pv: "move on to something", meaning: "pasar a otro tema", example: "Let's {{move on to}} the next item on the agenda." },
+  { pv: "set off", meaning: "partir / salir hacia un lugar", example: "We {{set off}} for the airport at 5 a.m." },
+  { pv: "set up home", meaning: "instalarse a vivir en un lugar", example: "They {{set up home}} in a small cottage in the countryside." },
+  { pv: "settle down", meaning: "asentarse, llevar vida tranquila en un sitio", example: "After years of travelling, he finally {{settled down}} in Madrid." },
+  { pv: "turn up", meaning: "aparecer / llegar", example: "He {{turned up}} at the party two hours late." },
+  { pv: "bolt something down", meaning: "comer algo muy rápido", example: "He {{bolted down}} his sandwich and ran to catch the train." },
+  { pv: "carry out something", meaning: "llevar a cabo (trabajo o investigación)", example: "Scientists are {{carrying out}} research on the virus." },
+  { pv: "draw something up", meaning: "preparar y redactar (un plan, contrato)", example: "The lawyer {{drew up}} a contract for both parties to sign." },
+  { pv: "give something back", meaning: "devolver algo", example: "Could you {{give back}} the book I lent you?" },
+  { pv: "give homework in", meaning: "entregar la tarea al profesor", example: "Remember to {{give in}} your homework on Monday." },
+  { pv: "give in", meaning: "ceder tras resistirse", example: "After hours of arguing, she finally {{gave in}}." },
+  { pv: "give out books", meaning: "repartir / distribuir algo a varias personas", example: "The teacher {{gave out}} the exam papers." },
+  { pv: "give something up", meaning: "dejar de hacer algo habitual", example: "I {{gave up}} smoking five years ago." },
+  { pv: "go in for a competition", meaning: "inscribirse / participar en una competición", example: "Are you {{going in for}} the swimming contest?" },
+  { pv: "gulp something down", meaning: "beber algo muy rápido", example: "She {{gulped down}} her coffee and rushed out of the door." },
+  { pv: "pick up a bargain", meaning: "comprar algo barato", example: "I {{picked up}} a real bargain at the market today." },
+  { pv: "put something off", meaning: "posponer / aplazar", example: "We had to {{put off}} the meeting until next week." },
+  { pv: "put on an event", meaning: "organizar un evento", example: "The school is {{putting on}} a play next month." },
+  { pv: "put clothes on", meaning: "ponerse ropa", example: "{{Put on}} your coat — it's freezing outside." },
+  { pv: "put music on", meaning: "poner música para escuchar", example: "Shall I {{put on}} some music while we cook?" },
+  { pv: "put your hand up", meaning: "levantar la mano", example: "{{Put your hand up}} if you know the answer." },
+  { pv: "put something together", meaning: "producir/montar combinando varias cosas", example: "She {{put together}} a presentation in just two hours." },
+  { pv: "run out of something", meaning: "agotarse / quedarse sin", example: "We've {{run out of}} milk — I'll pop to the shop." },
+  { pv: "sell out of something", meaning: "venderse todo", example: "The shop has {{sold out of}} the new console." },
+  { pv: "set something up", meaning: "montar / fundar (un negocio)", example: "He {{set up}} his own business at the age of 25." },
+  { pv: "sign up for something", meaning: "apuntarse / inscribirse", example: "I've {{signed up for}} a Spanish course this summer." },
+  { pv: "take something back", meaning: "devolver algo (a la tienda)", example: "I {{took back}} the shirt because it didn't fit." },
+  { pv: "take up a hobby", meaning: "empezar un deporte o hobby nuevo", example: "She's just {{taken up}} yoga and loves it." },
+  { pv: "try something on", meaning: "probarse una prenda de ropa", example: "Could I {{try on}} these jeans, please?" },
+  { pv: "turn something down", meaning: "rechazar algo", example: "He {{turned down}} the job offer because of the salary." },
+  { pv: "turn out to an event", meaning: "acudir a un evento", example: "Thousands {{turned out}} to watch the parade." },
+  { pv: "get away with something", meaning: "salirse con la suya sin castigo", example: "He cheated on the test and {{got away with}} it." },
+  { pv: "bring something about", meaning: "causar / provocar", example: "The new law {{brought about}} huge changes in education." },
+  { pv: "catch on (popular)", meaning: "ponerse de moda / hacerse popular", example: "The new app {{caught on}} quickly among teenagers." },
+  { pv: "push something up", meaning: "hacer aumentar / subir (precios, cifras)", example: "Bad weather has {{pushed up}} vegetable prices." },
+  { pv: "put prices up", meaning: "subir los precios", example: "The supermarket has {{put up}} its prices again." },
+  { pv: "put weight on", meaning: "engordar / ganar peso", example: "I've {{put on}} a lot of weight over the winter." },
+  { pv: "run into an amount", meaning: "alcanzar una cifra concreta", example: "The damage {{runs into}} millions of pounds." },
+  { pv: "take off", meaning: "tener éxito de repente", example: "Her career really {{took off}} after that film." },
+  { pv: "take over", meaning: "tomar el control", example: "A larger company has {{taken over}} our firm." },
+  { pv: "turn something into", meaning: "convertir algo en otra cosa distinta", example: "They {{turned}} the old factory {{into}} luxury flats." },
+  { pv: "turn out well/badly", meaning: "acabar (bien/mal)", example: "Don't worry — everything will {{turn out}} fine." },
+  { pv: "turn out to be a success", meaning: "resultar / acabar siendo algo", example: "The film {{turned out}} to be a huge success." },
+  { pv: "stand out", meaning: "destacar / llamar la atención", example: "Her red dress made her {{stand out}} in the crowd." }
+];
+
+const MODES = ['MEANING', 'BLANK', 'REVERSE'];
+const MODE_LABELS = {
+  MEANING: '📖 ELIGE EL SIGNIFICADO',
+  BLANK:   '✏️ COMPLETA EL HUECO',
+  REVERSE: '🔄 ELIGE EL PHRASAL VERB'
+};
+const MODE_PROMPTS = {
+  MEANING: '¿Qué significa este phrasal verb?',
+  BLANK:   '¿Qué phrasal verb va en el hueco?',
+  REVERSE: '¿Qué phrasal verb tiene este significado?'
+};
+
+let queue = [];
+let learned = new Set();
+let attempts = 0;
+let wrongCount = 0;
+let streak = 0;
+let mistakes = {}; // pv -> count
+let total = 0;
+let current = null;
+let currentMode = 'MEANING';
+let startTime = 0;
+let timerInterval = null;
+
+function shuffle(arr){ for(let i=arr.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [arr[i],arr[j]]=[arr[j],arr[i]]; } return arr; }
+function pick(n, from, exclude){
+  const pool = from.filter(x => x.pv !== exclude.pv);
+  shuffle(pool);
+  return pool.slice(0, n);
+}
+
+function startGame(){
+  queue = shuffle([...PHRASAL_VERBS]);
+  total = queue.length;
+  learned = new Set();
+  attempts = 0; wrongCount = 0; streak = 0; mistakes = {};
+  document.getElementById('total').textContent = total;
+  document.getElementById('learned').textContent = 0;
+  document.getElementById('queue-count').textContent = total;
+  document.getElementById('wrong-count').textContent = 0;
+  document.getElementById('streak').textContent = 0;
+  document.getElementById('start-screen').classList.add('hidden');
+  document.getElementById('end-screen').classList.add('hidden');
+  document.getElementById('game-screen').classList.remove('hidden');
+  startTime = Date.now();
+  if(timerInterval) clearInterval(timerInterval);
+  timerInterval = setInterval(updateTimer, 1000);
+  nextCard();
+}
+
+function updateTimer(){
+  const s = Math.floor((Date.now()-startTime)/1000);
+  const m = Math.floor(s/60);
+  document.getElementById('timer').textContent = m+':'+String(s%60).padStart(2,'0');
+}
+
+function renderExample(item, highlight){
+  const text = item.example;
+  if(highlight){
+    return text.replace(/\{\{([^}]+)\}\}/g, '<b>$1</b>');
+  } else {
+    return text.replace(/\{\{[^}]+\}\}/g, '<span class="blank">_____</span>');
+  }
+}
+
+function nextCard(){
+  document.getElementById('feedback').classList.add('hidden');
+  document.getElementById('next-btn').classList.add('hidden');
+
+  if(learned.size >= total){ endGame(); return; }
+  current = queue.shift();
+  currentMode = MODES[Math.floor(Math.random()*MODES.length)];
+
+  document.getElementById('queue-count').textContent = queue.length;
+  document.getElementById('mode-tag').textContent = MODE_LABELS[currentMode];
+
+  const card = document.getElementById('card');
+  card.style.animation = 'none'; void card.offsetWidth; card.style.animation = '';
+
+  const prompt = document.getElementById('prompt');
+  const content = document.getElementById('question-content');
+  prompt.textContent = MODE_PROMPTS[currentMode];
+
+  const distractors = pick(3, PHRASAL_VERBS, current);
+  let options = [];
+
+  if(currentMode === 'MEANING'){
+    content.innerHTML = `<div class="pv-text">${current.pv}</div>`;
+    options = [
+      { text: current.meaning, correct: true },
+      ...distractors.map(d => ({ text: d.meaning, correct: false }))
+    ];
+  } else if(currentMode === 'BLANK'){
+    content.innerHTML = `<div class="example-text">${renderExample(current, false)}</div>`;
+    options = [
+      { text: current.pv, correct: true },
+      ...distractors.map(d => ({ text: d.pv, correct: false }))
+    ];
+  } else { // REVERSE
+    content.innerHTML = `<div class="meaning-text">"${current.meaning}"</div>`;
+    options = [
+      { text: current.pv, correct: true },
+      ...distractors.map(d => ({ text: d.pv, correct: false }))
+    ];
+  }
+
+  shuffle(options);
+  const optsDiv = document.getElementById('options');
+  optsDiv.innerHTML = '';
+  options.forEach((o, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'opt-btn';
+    btn.textContent = o.text;
+    btn.onclick = () => answer(btn, o.correct, options);
+    optsDiv.appendChild(btn);
+  });
+}
+
+function answer(btn, isCorrect, options){
+  attempts++;
+  const allBtns = document.querySelectorAll('.opt-btn');
+  allBtns.forEach(b => b.disabled = true);
+
+  const fb = document.getElementById('feedback');
+  if(isCorrect){
+    btn.classList.add('correct-ans');
+    allBtns.forEach(b => { if(b !== btn) b.classList.add('faded'); });
+    streak++;
+    if(!learned.has(current.pv)){
+      learned.add(current.pv);
+      document.getElementById('learned').textContent = learned.size;
+    }
+    fb.className = 'feedback correct';
+    fb.innerHTML = `
+      <h3>✅ ¡Correcto!</h3>
+      <p><b>${current.pv}</b> = ${current.meaning}</p>
+      <div class="example">📝 ${renderExample(current, true)}</div>
+      <p style="margin-top:8px; font-size:0.9em; color:#666;">💡 Memoriza el ejemplo — te ayudará a recordar el significado.</p>
+    `;
+  } else {
+    btn.classList.add('wrong-ans');
+    allBtns.forEach(b => {
+      const correctOpt = options.find(o => o.correct);
+      if(b.textContent === correctOpt.text) b.classList.add('correct-ans');
+      else if(b !== btn) b.classList.add('faded');
+    });
+    streak = 0;
+    wrongCount++;
+    mistakes[current.pv] = (mistakes[current.pv] || 0) + 1;
+    document.getElementById('wrong-count').textContent = wrongCount;
+    if(!learned.has(current.pv)){
+      queue.push(current);
+    }
+    fb.className = 'feedback wrong';
+    fb.innerHTML = `
+      <h3>❌ Incorrecto</h3>
+      <p><b>${current.pv}</b> significa: <i>${current.meaning}</i></p>
+      <div class="example">📝 ${renderExample(current, true)}</div>
+      <p class="requeue-note">🔁 Este phrasal verb volverá a aparecer hasta que lo aciertes.</p>
+    `;
+  }
+
+  document.getElementById('streak').textContent = streak;
+  document.getElementById('queue-count').textContent = queue.length;
+  document.getElementById('progress-fill').style.width = (learned.size/total*100)+'%';
+  fb.classList.remove('hidden');
+  document.getElementById('next-btn').classList.remove('hidden');
+}
+
+function endGame(){
+  clearInterval(timerInterval);
+  document.getElementById('game-screen').classList.add('hidden');
+  document.getElementById('end-screen').classList.remove('hidden');
+  const acc = attempts > 0 ? Math.round(learned.size/attempts*100) : 100;
+  document.getElementById('final-score').textContent = acc + '%';
+  document.getElementById('final-time').textContent = document.getElementById('timer').textContent;
+  document.getElementById('final-attempts').textContent = attempts;
+  document.getElementById('final-wrong').textContent = wrongCount;
+
+  const rb = document.getElementById('review-block');
+  const failed = Object.entries(mistakes).sort((a,b)=>b[1]-a[1]);
+  if(failed.length){
+    rb.innerHTML = '<h3 style="color:#d63031;margin-bottom:10px;">📚 Repasa los que más te costaron:</h3>' +
+      failed.map(([pv, count]) => {
+        const item = PHRASAL_VERBS.find(p => p.pv === pv);
+        return `<div class="review-item">
+          <span class="pv">${pv}</span> (${count} error${count>1?'es':''}) — ${item.meaning}
+          <div class="ex">📝 ${renderExample(item, true)}</div>
+        </div>`;
+      }).join('');
+  } else {
+    rb.innerHTML = '<h3 style="color:#00b894;text-align:center;margin-top:14px;">🏆 ¡Ronda perfecta sin errores!</h3>';
+  }
+}
+</script>
+</body>
+</html>
