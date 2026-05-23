@@ -14,34 +14,68 @@
     color: #fff;
   }
 
-  /* ─── Header ─── */
-  .portal-header {
+  /* ─── Header compartido (portal + juegos) ─── */
+  .site-header {
     text-align: center;
     padding: 48px 20px 16px;
   }
-  .portal-header h1 {
+  .site-header h1 {
     font-size: 2.6em;
     margin-bottom: 8px;
     text-shadow: 2px 2px 6px rgba(0,0,0,0.35);
     letter-spacing: 1px;
   }
-  .portal-header .tagline {
+  .site-header .tagline {
     font-size: 1.1em;
     opacity: 0.75;
     max-width: 480px;
     margin: 0 auto 10px;
     line-height: 1.5;
   }
-  .portal-header .game-count {
-    display: inline-block;
+
+  .game-count {
+    display: block;
+    text-align: center;
     background: rgba(255,255,255,0.12);
     padding: 6px 18px;
     border-radius: 24px;
     font-size: 0.85em;
     backdrop-filter: blur(4px);
-    margin-top: 4px;
+    margin: 4px auto 0;
+    width: fit-content;
   }
-  .portal-header .game-count span { font-weight: bold; color: #ffd200; }
+  .game-count span { font-weight: bold; color: #ffd200; }
+
+  /* ─── Filter Bar ─── */
+  .filter-bar {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin: 24px auto 0;
+    padding: 0 20px;
+    flex-wrap: wrap;
+  }
+  .filter-bar .filter-btn {
+    padding: 8px 22px;
+    border: 2px solid rgba(255,255,255,0.2);
+    border-radius: 99px;
+    background: transparent;
+    color: rgba(255,255,255,0.65);
+    font-size: 0.85em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s;
+    letter-spacing: 0.3px;
+  }
+  .filter-bar .filter-btn:hover {
+    border-color: rgba(255,255,255,0.5);
+    color: #fff;
+  }
+  .filter-bar .filter-btn.active {
+    background: rgba(255,255,255,0.15);
+    border-color: rgba(255,255,255,0.5);
+    color: #fff;
+  }
 
   /* ─── Games Grid ─── */
   .games-grid {
@@ -127,6 +161,10 @@
   .game-meta .tag.level { background: #ffeaa7; color: #6c4a00; }
   .game-meta .tag.items { background: #dfe6e9; color: #2d3436; }
   .game-meta .tag.modes { background: #a29bfe; color: #fff; }
+  .game-meta .tag.cat-phrasal { background: #6c5ce7; color: #fff; }
+  .game-meta .tag.cat-gerund { background: #00b894; color: #fff; }
+
+  .game-card.hidden { display: none; }
 
   .play-btn {
     display: inline-flex;
@@ -152,45 +190,36 @@
     transform: translateY(-1px);
   }
 
-  /* ─── Coming Soon ─── */
-  .game-card.coming {
-    opacity: 0.75;
-    border: 2px dashed rgba(255,255,255,0.35);
-    background: rgba(255,255,255,0.55);
-    backdrop-filter: blur(4px);
-    cursor: default;
-    pointer-events: none;
-  }
-  .game-card.coming .play-btn {
-    background: #b2bec3;
-    box-shadow: none;
-    cursor: default;
-  }
-
-  /* ─── Footer ─── */
-  .portal-footer {
+  /* ─── Footer compartido (portal + juegos) ─── */
+  .site-footer {
     text-align: center;
     padding: 28px 20px 36px;
     opacity: 0.5;
     font-size: 0.82em;
     letter-spacing: 0.3px;
   }
-  .portal-footer a { color: inherit; text-decoration: none; }
-  .portal-footer a:hover { opacity: 0.8; text-decoration: underline; }
+  .site-footer a { color: inherit; text-decoration: none; }
+  .site-footer a:hover { opacity: 0.8; text-decoration: underline; }
 </style>
 </head>
 <body>
 
-<header class="portal-header">
+<header class="site-header">
   <h1>🎮 English Student Games</h1>
   <p class="tagline">Juegos interactivos para aprender y practicar inglés — diseñados para todas las edades</p>
-  <div class="game-count"><span>1</span> juego disponible · más próximamente</div>
 </header>
+<div class="game-count"><span>3</span> juegos disponibles</div>
+
+<div class="filter-bar">
+  <button class="filter-btn active" data-filter="all">Todos</button>
+  <button class="filter-btn" data-filter="phrasal-verbs">Phrasal Verbs</button>
+  <button class="filter-btn" data-filter="gerund-infinitive">Gerund &amp; Infinitive</button>
+</div>
 
 <main class="games-grid">
 
-  <!-- Phrasal Verbs -->
-  <div class="game-card">
+  <!-- game1: Phrasal Verbs — Memorización -->
+  <div class="game-card" data-category="phrasal-verbs">
     <div class="game-icon">🧠</div>
     <h2>Phrasal Verbs — Memorización</h2>
     <p class="game-desc">
@@ -201,29 +230,67 @@
       <span class="tag level">B2</span>
       <span class="tag items">92 phrasal verbs</span>
       <span class="tag modes">3 modos</span>
+      <span class="tag cat-phrasal">Phrasal Verbs</span>
     </div>
-    <a href="games/phrasal-verbs/" class="play-btn">▶ Jugar</a>
+    <a href="games/phrasal-verbs/game1.html" class="play-btn">▶ Jugar</a>
   </div>
 
-  <!-- Coming Soon -->
-  <div class="game-card coming">
-    <div class="game-icon">🆕</div>
-    <h2>Más juegos próximamente</h2>
+  <!-- game2: Phrasal Verbs — Clasificación -->
+  <div class="game-card" data-category="phrasal-verbs">
+    <div class="game-icon">🏷️</div>
+    <h2>Phrasal Verbs — Clasificación</h2>
     <p class="game-desc">
-      Estamos preparando nuevos juegos para practicar vocabulario,
-      gramática, listening y mucho más. ¡Vuelve pronto!
+      Clasifica 95 phrasal verbs del B2 First en 6 categorías temáticas
+      (personas, comunicación, dinero, viajes, vida diaria, cuerpo).
     </p>
     <div class="game-meta">
-      <span class="tag">—</span>
+      <span class="tag level">B2</span>
+      <span class="tag items">95 phrasal verbs</span>
+      <span class="tag modes">6 categorías</span>
+      <span class="tag cat-phrasal">Phrasal Verbs</span>
     </div>
-    <span class="play-btn">Próximamente</span>
+    <a href="games/phrasal-verbs/game2.html" class="play-btn">▶ Jugar</a>
+  </div>
+
+  <!-- game3: Gerund & Infinitive Trainer -->
+  <div class="game-card" data-category="gerund-infinitive">
+    <div class="game-icon">🧩</div>
+    <h2>Gerund &amp; Infinitive Trainer</h2>
+    <p class="game-desc">
+      Elige entre gerundio, infinitivo con &laquo;to&raquo; o bare infinitive
+      para cada verbo. 84 ejercicios con explicaciones y ejemplos FCE B2.
+    </p>
+    <div class="game-meta">
+      <span class="tag level">B2</span>
+      <span class="tag items">84 ejercicios</span>
+      <span class="tag modes">3 formas</span>
+      <span class="tag cat-gerund">Gerund &amp; Inf.</span>
+    </div>
+    <a href="games/gerund-infinitive/game3.html" class="play-btn">▶ Jugar</a>
   </div>
 
 </main>
 
-<footer class="portal-footer">
-  <a href="/">englishstudentgames.com</a> &nbsp;·&nbsp; English Student Games
+<footer class="site-footer">
+  <a href="/">englishstudentgames.com</a> &nbsp;·&nbsp; © 2026 English Student Games
 </footer>
+
+<script>
+  document.querySelectorAll('.filter-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      document.querySelectorAll('.filter-btn').forEach(function(b){ b.classList.remove('active'); });
+      btn.classList.add('active');
+      var filter = btn.getAttribute('data-filter');
+      document.querySelectorAll('.game-card').forEach(function(card){
+        if(filter === 'all' || card.getAttribute('data-category') === filter){
+          card.classList.remove('hidden');
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+    });
+  });
+</script>
 
 </body>
 </html>
