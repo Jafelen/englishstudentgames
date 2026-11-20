@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Phrasal Verbs - Significados | English Student Games</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    min-height: 100vh;
+    color: #fff;
+    padding: 20px;
+  }
+  .container { max-width: 900px; margin: 0 auto; }
+  h1 { text-align: center; font-size: 1.9em; margin-bottom: 6px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+  .subtitle { text-align: center; opacity: 0.85; margin-bottom: 18px; font-size: 0.92em; }
+
+  .site-header { text-align: center; padding: 28px 20px 16px; }
+  .site-header h1 { font-size: 2.6em; margin-bottom: 8px; letter-spacing: 1px; }
+  .site-header .tagline {
+    font-size: 1.1em; opacity: 0.75; max-width: 480px;
+    margin: 0 auto 10px; line-height: 1.5;
+  }
+  .site-footer { text-align: center; padding: 28px 20px 16px; opacity: 0.5; font-size: 0.82em; }
+  .site-footer a { color: inherit; }
+
+  .stats {
+    display: flex; justify-content: space-around;
+    background: rgba(255,255,255,0.1); padding: 14px;
+    border-radius: 12px; margin-bottom: 18px; backdrop-filter: blur(8px);
+  }
+  .stat { text-align: center; }
+  .stat-label { font-size: 0.7em; opacity: 0.8; text-transform: uppercase; letter-spacing: 0.5px; }
+  .stat-value { font-size: 1.5em; font-weight: bold; }
+
+  .progress-bar { height: 8px; background: rgba(255,255,255,0.2); border-radius: 4px; overflow: hidden; margin-bottom: 18px; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, #ffd200, #ff6b6b); width: 0%; transition: width 0.4s ease; }
+
+  .card {
+    background: rgba(255,255,255,0.97); color: #1e3c72;
+    border-radius: 18px; padding: 28px 22px; text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3); margin-bottom: 18px;
+    min-height: 150px; display: flex; flex-direction: column; justify-content: center;
+    animation: flipIn 0.45s ease;
+  }
+  @keyframes flipIn { from { transform: rotateY(90deg); opacity: 0; } to { transform: rotateY(0); opacity: 1; } }
+  .question-prompt { font-size: 0.85em; color: #777; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px; }
+  .pv-text { font-size: 2.1em; font-weight: bold; color: #1e3c72; }
+
+  .options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+  .opt-btn {
+    padding: 14px 16px; border: 2px solid rgba(255,255,255,0.3);
+    border-radius: 12px; font-size: 0.98em;
+    background: rgba(255,255,255,0.95); color: #1e3c72;
+    cursor: pointer; text-align: left; line-height: 1.35;
+    transition: transform 0.15s, box-shadow 0.15s, background 0.2s;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  }
+  .opt-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 16px rgba(0,0,0,0.3); }
+  .opt-btn:focus-visible, .start-btn:focus-visible, .next-btn:focus-visible, .restart-btn:focus-visible { outline: 3px solid #ffd200; outline-offset: 3px; }
+  .opt-btn:disabled { cursor: not-allowed; }
+  .opt-btn.correct-ans { background: #00b894; color: #fff; border-color: #00b894; }
+  .opt-btn.wrong-ans { background: #d63031; color: #fff; border-color: #d63031; }
+  .opt-btn.faded { opacity: 0.45; }
+
+  .feedback {
+    background: rgba(255,255,255,0.97); color: #222;
+    border-radius: 14px; padding: 18px; margin-bottom: 14px;
+    border-left: 6px solid #888; animation: fadeIn 0.3s ease;
+  }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+  .feedback.correct { border-left-color: #00b894; }
+  .feedback.wrong { border-left-color: #d63031; }
+  .feedback h3 { margin-bottom: 8px; font-size: 1.05em; }
+  .feedback p { margin-bottom: 6px; line-height: 1.5; }
+  .feedback .other-meanings { color: #555; }
+  .feedback .example {
+    font-style: italic; color: #1e3c72; background: #fff5d6;
+    padding: 10px 14px; border-radius: 8px; margin-top: 10px;
+    border-left: 4px solid #ffd200; font-size: 1.05em; line-height: 1.5;
+  }
+  .feedback .example b, .review-item .ex b { background: #ffd200; padding: 1px 5px; border-radius: 3px; color: #1e3c72; }
+  .feedback .translation { background: #eef4ff; color: #2d3436; padding: 10px 14px; border-radius: 8px; margin-top: 8px; line-height: 1.5; }
+  .requeue-note { font-size: 0.85em; color: #d63031; margin-top: 10px; font-weight: bold; }
+
+  .next-btn, .start-btn, .restart-btn {
+    width: 100%; padding: 14px;
+    background: linear-gradient(135deg, #ffd200, #ff6b6b);
+    color: #fff; border: none; border-radius: 12px;
+    font-size: 1.05em; font-weight: bold; cursor: pointer;
+    box-shadow: 0 6px 14px rgba(0,0,0,0.3);
+    transition: transform 0.15s;
+  }
+  .next-btn:hover, .start-btn:hover, .restart-btn:hover { transform: translateY(-2px); }
+  .round-options { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 16px; }
+
+  .hidden { display: none !important; }
+  .summary { background: rgba(255,255,255,0.97); color: #222; border-radius: 16px; padding: 24px; margin-bottom: 14px; }
+  .summary h2 { color: #1e3c72; margin-bottom: 12px; text-align: center; }
+  .summary .big { font-size: 2.4em; text-align: center; color: #00b894; font-weight: bold; margin: 10px 0; }
+  .summary-stats { text-align: center; line-height: 1.7; }
+  .review-block { margin-top: 18px; max-height: 360px; overflow-y: auto; }
+  .review-block h3 { margin-bottom: 10px; }
+  .review-item { background: #f8f9fc; padding: 12px; border-radius: 8px; margin-bottom: 8px; border-left: 3px solid #6c5ce7; line-height: 1.5; }
+  .review-item .pv { font-weight: bold; color: #1e3c72; }
+  .review-item .ex { font-style: italic; color: #1e3c72; margin-top: 6px; }
+  .review-item .es { color: #555; font-size: 0.92em; margin-top: 4px; }
+
+  .intro-card { background: rgba(255,255,255,0.97); color: #222; border-radius: 16px; padding: 22px; line-height: 1.55; }
+  .intro-card h3 { color: #1e3c72; margin-bottom: 8px; }
+  .intro-card ul { margin: 8px 0 0 22px; }
+  .intro-card .rule { background: #f0f3f7; padding: 8px 12px; border-radius: 8px; margin: 6px 0; }
+
+  @media (max-width: 600px) {
+    body { padding: 10px; }
+    .site-header { padding: 18px 10px 12px; }
+    .site-header h1 { font-size: 2em; }
+    .options, .round-options { grid-template-columns: 1fr; }
+    .stats { flex-wrap: wrap; gap: 14px 8px; }
+    .stat { min-width: 28%; }
+    .stat-value { font-size: 1.3em; }
+    .pv-text { font-size: 1.75em; }
+  }
+</style>
+</head>
+<body>
+<header class="site-header">
+  <a href="../../" style="color:inherit;text-decoration:none">
+    <h1>🎮 English Student Games</h1>
+    <p class="tagline">Juegos interactivos para aprender y practicar inglés — diseñados para todas las edades</p>
+  </a>
+</header>
+<main class="container">
+  <h1>📖 Phrasal Verbs - Significados</h1>
+  <div class="subtitle">B2 · 150 phrasal verbs · elige 10, 15 o 20 por ronda</div>
+
+  <section id="start-screen">
+    <div class="intro-card">
+      <h3>🎯 Objetivo</h3>
+      <p>Memoriza los phrasal verbs y sus significados a través de ejemplos de uso con traducción al español.</p>
+      <h3 style="margin-top:14px;">🎮 Cómo se juega</h3>
+      <div class="rule">📖 Lee el phrasal verb y elige el significado que corresponde al ejemplo.</div>
+      <div class="rule">💬 Después de responder, verás el ejemplo en inglés, su traducción y los otros significados.</div>
+      <div class="rule">🔁 Si fallas, la tarjeta volverá al final de la cola hasta que la aciertes.</div>
+      <h3 style="margin-top:14px;">Elige la cantidad para tu ronda</h3>
+      <div class="round-options">
+        <button type="button" class="start-btn" onclick="startGame(10)">10 phrasal verbs</button>
+        <button type="button" class="start-btn" onclick="startGame(15)">15 phrasal verbs</button>
+        <button type="button" class="start-btn" onclick="startGame(20)">20 phrasal verbs</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="game-screen" class="hidden">
+    <div class="stats">
+      <div class="stat"><div class="stat-label">Aciertos</div><div class="stat-value"><span id="learned">0</span>/<span id="total">0</span></div></div>
+      <div class="stat"><div class="stat-label">En cola</div><div class="stat-value" id="queue-count">0</div></div>
+      <div class="stat"><div class="stat-label">Errores</div><div class="stat-value" id="wrong-count">0</div></div>
+      <div class="stat"><div class="stat-label">Racha</div><div class="stat-value" id="streak">0</div></div>
+      <div class="stat"><div class="stat-label">Tiempo</div><div class="stat-value" id="timer">0:00</div></div>
+    </div>
+    <div class="progress-bar" role="progressbar" aria-label="Progreso de la ronda" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="progress-fill" id="progress-fill"></div></div>
+
+    <div class="card" id="card">
+      <div class="question-prompt">¿Qué significa este phrasal verb?</div>
+      <div class="pv-text" id="question-content">—</div>
+    </div>
+    <div class="options" id="options"></div>
+    <div id="feedback" class="hidden" aria-live="polite"></div>
+    <button type="button" class="next-btn hidden" id="next-btn" onclick="nextCard()">Siguiente ➡️</button>
+  </section>
+
+  <section id="end-screen" class="hidden">
+    <div class="summary">
+      <h2>🏁 ¡Ronda completada!</h2>
+      <div class="big" id="final-score">100%</div>
+      <p class="summary-stats">
+        Tiempo: <b id="final-time">0:00</b> · Total de intentos: <b id="final-attempts">0</b><br>
+        Errores: <b id="final-wrong">0</b> · Mejor racha: <b id="final-best-streak">0</b>
+      </p>
+      <div class="review-block" id="review-block"></div>
+    </div>
+    <button type="button" class="restart-btn" onclick="showStart()">🔄 Jugar otra ronda</button>
+  </section>
+</main>
+<footer class="site-footer"><a href="/">englishstudentgames.com</a> &nbsp;·&nbsp; © 2026 English Student Games</footer>
+
+<script>
+const PHRASAL_VERBS = [
+  {"pv":"back up","meaning":"hacer una copia de seguridad","others":"respaldar; apoyar a alguien","example":"Always {{back up}} your files before updating the system.","translation":"Haz siempre una copia de seguridad de tus archivos antes de actualizar el sistema."},
+  {"pv":"blow up","meaning":"enfurecerse","others":"explotar; inflar","example":"He {{blew up}} when he saw the bill.","translation":"Él se enfureció cuando vio la factura."},
+  {"pv":"break down","meaning":"averiarse, romperse","others":"derrumbarse emocionalmente; desglosar","example":"My car {{broke down}} on the highway.","translation":"Mi coche se averió en la autopista."},
+  {"pv":"break into","meaning":"entrar a la fuerza (robar)","others":"","example":"Someone {{broke into}} our house last night.","translation":"Alguien entró a robar en nuestra casa anoche."},
+  {"pv":"break out","meaning":"estallar (guerra, incendio)","others":"escaparse","example":"A fire {{broke out}} in the kitchen.","translation":"Un incendio estalló en la cocina."},
+  {"pv":"break up","meaning":"cortar una relación","others":"disolverse","group":"relationship","example":"They {{broke up}} after five years together.","translation":"Cortaron después de cinco años juntos."},
+  {"pv":"bring up","meaning":"sacar un tema","others":"criar","example":"She {{brought up}} an interesting point in the meeting.","translation":"Ella planteó un tema interesante en la reunión."},
+  {"pv":"call back","meaning":"devolver una llamada","others":"","example":"I'll {{call you back}} in ten minutes.","translation":"Te devuelvo la llamada en diez minutos."},
+  {"pv":"call off","meaning":"cancelar","others":"","example":"The match was {{called off}} because of the rain.","translation":"El partido se canceló por la lluvia."},
+  {"pv":"calm down","meaning":"calmarse, tranquilizarse","others":"","example":"{{Calm down}} and tell me what happened.","translation":"Cálmate y dime qué pasó."},
+  {"pv":"carry on","meaning":"continuar, seguir","others":"","group":"continue","example":"{{Carry on}} with your work, please.","translation":"Continúa con tu trabajo, por favor."},
+  {"pv":"carry out","meaning":"llevar a cabo, realizar","others":"","example":"The team {{carried out}} a detailed analysis.","translation":"El equipo realizó un análisis detallado."},
+  {"pv":"catch up (with)","meaning":"ponerse al día","others":"alcanzar a alguien","example":"Let's meet for coffee and {{catch up}}.","translation":"Reunámonos a tomar un café y pongámonos al día."},
+  {"pv":"check in","meaning":"registrarse (hotel, aeropuerto)","others":"","example":"We {{checked in}} at the hotel at 3 p.m.","translation":"Nos registramos en el hotel a las 3 p. m."},
+  {"pv":"check out","meaning":"mirar, echar un vistazo","others":"dejar el hotel","example":"{{Check out}} this new song!","translation":"¡Escucha esta nueva canción!"},
+  {"pv":"cheer up","meaning":"animar(se)","others":"","example":"{{Cheer up}}! It's not the end of the world.","translation":"¡Anímate! No es el fin del mundo."},
+  {"pv":"clean up","meaning":"limpiar, ordenar","others":"","example":"Please {{clean up}} your room before dinner.","translation":"Limpia tu habitación antes de la cena."},
+  {"pv":"come across","meaning":"encontrarse con algo/alguien por casualidad","others":"dar una impresión","group":"chance","example":"I {{came across}} an old photo of my parents.","translation":"Encontré por casualidad una foto antigua de mis padres."},
+  {"pv":"come along","meaning":"progresar","others":"acompañar","example":"How is your project {{coming along}}?","translation":"¿Cómo va tu proyecto?"},
+  {"pv":"come back","meaning":"volver, regresar","others":"","group":"return","example":"When are you {{coming back}} from your trip?","translation":"¿Cuándo vuelves de tu viaje?"},
+  {"pv":"come down with","meaning":"enfermarse de (algo leve)","others":"","example":"I think I'm {{coming down with}} a cold.","translation":"Creo que estoy empezando a resfriarme."},
+  {"pv":"come over","meaning":"venir (a casa de alguien)","others":"","example":"Why don't you {{come over}} for dinner tonight?","translation":"¿Por qué no vienes a cenar esta noche?"},
+  {"pv":"come up","meaning":"surgir, aparecer (un tema, un problema)","others":"","example":"Something urgent {{came up}} at work.","translation":"Surgió algo urgente en el trabajo."},
+  {"pv":"come up with","meaning":"idear, ocurrírsele algo","others":"","example":"She {{came up with}} a brilliant idea.","translation":"Se le ocurrió una idea brillante."},
+  {"pv":"count on","meaning":"contar con, confiar en","others":"","group":"trust","example":"You can always {{count on}} me.","translation":"Siempre puedes contar conmigo."},
+  {"pv":"cut down on","meaning":"reducir el consumo de algo","others":"","example":"I'm trying to {{cut down on}} sugar.","translation":"Estoy intentando reducir el consumo de azúcar."},
+  {"pv":"cut off","meaning":"cortar (suministro, comunicación)","others":"interrumpir","example":"Our electricity was {{cut off}} yesterday.","translation":"Ayer nos cortaron la electricidad."},
+  {"pv":"deal with","meaning":"ocuparse de, lidiar con","others":"","example":"I'll {{deal with}} this problem tomorrow.","translation":"Me ocuparé de este problema mañana."},
+  {"pv":"do without","meaning":"arreglárselas sin algo","others":"","group":"cope","example":"I can't {{do without}} my morning coffee.","translation":"No puedo arreglármelas sin mi café de la mañana."},
+  {"pv":"drop by","meaning":"pasar a visitar (brevemente)","others":"","example":"{{Drop by}} my office whenever you want.","translation":"Pasa por mi oficina cuando quieras."},
+  {"pv":"drop off","meaning":"dejar a alguien/algo en un lugar","others":"","example":"I'll {{drop you off}} at the station.","translation":"Te dejo en la estación."},
+  {"pv":"drop out","meaning":"abandonar (estudios, competencia)","others":"","example":"He {{dropped out of}} university in his second year.","translation":"Abandonó la universidad en su segundo año."},
+  {"pv":"eat out","meaning":"comer afuera (en un restaurante)","others":"","example":"We usually {{eat out}} on Fridays.","translation":"Normalmente comemos afuera los viernes."},
+  {"pv":"end up","meaning":"terminar (en una situación o lugar)","others":"","group":"result","example":"We got lost and {{ended up}} in a different town.","translation":"Nos perdimos y terminamos en un pueblo diferente."},
+  {"pv":"fall apart","meaning":"desmoronarse, deshacerse","others":"","example":"These old shoes are {{falling apart}}.","translation":"Estos zapatos viejos se están deshaciendo."},
+  {"pv":"fall behind","meaning":"atrasarse, quedarse atrás","others":"","example":"I {{fell behind}} with my homework.","translation":"Me atrasé con la tarea."},
+  {"pv":"fall for","meaning":"enamorarse de","others":"caer en un engaño","example":"He {{fell for}} her the moment they met.","translation":"Se enamoró de ella en el momento en que se conocieron."},
+  {"pv":"fall out (with)","meaning":"pelearse, enemistarse","others":"","example":"She {{fell out with}} her sister over money.","translation":"Se peleó con su hermana por dinero."},
+  {"pv":"figure out","meaning":"descifrar, entender, resolver","others":"","group":"solve","example":"I can't {{figure out}} how this app works.","translation":"No logro entender cómo funciona esta aplicación."},
+  {"pv":"fill in","meaning":"completar (formulario)","others":"reemplazar a alguien","group":"form","example":"Please {{fill in}} your name and address.","translation":"Completa tu nombre y dirección, por favor."},
+  {"pv":"fill out","meaning":"rellenar (un formulario completo)","others":"","group":"form","example":"You need to {{fill out}} this application form.","translation":"Debes completar este formulario de solicitud."},
+  {"pv":"fill up","meaning":"llenar(se) (tanque, recipiente)","others":"","example":"Let's {{fill up}} the tank before the trip.","translation":"Llenemos el tanque antes del viaje."},
+  {"pv":"find out","meaning":"averiguar, descubrir","others":"","example":"I {{found out}} the truth yesterday.","translation":"Ayer descubrí la verdad."},
+  {"pv":"fit in","meaning":"encajar, adaptarse","others":"","example":"It took him a while to {{fit in}} at his new school.","translation":"Le costó un tiempo adaptarse a su nueva escuela."},
+  {"pv":"get along (with)","meaning":"llevarse bien con","others":"","example":"I {{get along}} very well with my colleagues.","translation":"Me llevo muy bien con mis compañeros."},
+  {"pv":"get away","meaning":"irse de vacaciones","others":"escaparse","example":"We need to {{get away}} for a few days.","translation":"Necesitamos irnos de vacaciones unos días."},
+  {"pv":"get back","meaning":"volver","others":"recuperar algo","group":"return","example":"What time did you {{get back}} home?","translation":"¿A qué hora volviste a casa?"},
+  {"pv":"get by","meaning":"arreglárselas, sobrevivir","others":"","group":"cope","example":"I can {{get by}} with my basic French.","translation":"Puedo arreglármelas con mi francés básico."},
+  {"pv":"get into","meaning":"interesarse por","others":"entrar; meterse en","group":"hobby","example":"She {{got into}} yoga last year.","translation":"El año pasado empezó a interesarse por el yoga."},
+  {"pv":"get off","meaning":"bajarse (de transporte público)","others":"","example":"{{Get off}} the bus at the next stop.","translation":"Baja del autobús en la próxima parada."},
+  {"pv":"get on","meaning":"subirse (a transporte público)","others":"llevarse bien","example":"We {{got on}} the train just in time.","translation":"Subimos al tren justo a tiempo."},
+  {"pv":"get out","meaning":"salir; escaparse","others":"","example":"{{Get out}} of the car, please.","translation":"Sal del coche, por favor."},
+  {"pv":"get over","meaning":"superar, recuperarse de","others":"","example":"It took her months to {{get over}} the breakup.","translation":"Le llevó meses superar la ruptura."},
+  {"pv":"get rid of","meaning":"deshacerse de","others":"","group":"dispose","example":"I need to {{get rid of}} these old clothes.","translation":"Necesito deshacerme de esta ropa vieja."},
+  {"pv":"get up","meaning":"levantarse (de la cama)","others":"","example":"I {{get up}} at 6:30 every morning.","translation":"Me levanto a las 6:30 todas las mañanas."},
+  {"pv":"give back","meaning":"devolver","others":"","group":"return","example":"Can you {{give me back}} my book?","translation":"¿Puedes devolverme mi libro?"},
+  {"pv":"give in","meaning":"ceder, rendirse ante la presión","others":"","group":"surrender","example":"The kids kept asking until their mother {{gave in}}.","translation":"Los niños siguieron pidiendo hasta que su madre cedió."},
+  {"pv":"give up","meaning":"rendirse; dejar de hacer algo","others":"","group":"surrender","example":"Don't {{give up}}! You're almost there.","translation":"¡No te rindas! Ya casi lo logras."},
+  {"pv":"go ahead","meaning":"adelante, proceder","others":"","example":"{{Go ahead}}, start without me.","translation":"Adelante, empieza sin mí."},
+  {"pv":"go back","meaning":"volver, regresar","others":"","group":"return","example":"I'd love to {{go back}} to Italy someday.","translation":"Me encantaría volver a Italia algún día."},
+  {"pv":"go down","meaning":"caerse (un sistema)","others":"bajar, disminuir","example":"The server {{went down}} for two hours.","translation":"El servidor estuvo caído durante dos horas."},
+  {"pv":"go off","meaning":"sonar (alarma)","others":"explotar; echarse a perder","example":"My alarm {{went off}} at 5 a.m.","translation":"Mi alarma sonó a las 5 a. m."},
+  {"pv":"go on","meaning":"suceder","others":"continuar","example":"What's {{going on}} here?","translation":"¿Qué está pasando aquí?"},
+  {"pv":"go out","meaning":"salir (a divertirse)","others":"apagarse (luz, fuego)","example":"Are you {{going out}} tonight?","translation":"¿Vas a salir esta noche?"},
+  {"pv":"go over","meaning":"revisar, repasar","others":"","example":"Let's {{go over}} the main points again.","translation":"Repasemos los puntos principales otra vez."},
+  {"pv":"go through","meaning":"pasar por (situación difícil)","others":"revisar en detalle","example":"She's {{going through}} a tough time.","translation":"Está pasando por un momento difícil."},
+  {"pv":"go up","meaning":"subir, aumentar","others":"","example":"Prices have {{gone up}} a lot this year.","translation":"Los precios han subido mucho este año."},
+  {"pv":"grow up","meaning":"crecer, criarse","others":"","example":"I {{grew up}} in a small town.","translation":"Crecí en un pueblo pequeño."},
+  {"pv":"hand in","meaning":"entregar (tarea, documento)","others":"","example":"{{Hand in}} your essays by Friday.","translation":"Entrega tus ensayos antes del viernes."},
+  {"pv":"hand out","meaning":"repartir, distribuir","others":"","example":"The teacher {{handed out}} the exam papers.","translation":"El profesor repartió los exámenes."},
+  {"pv":"hang on","meaning":"esperar un momento","others":"agarrarse","group":"wait","example":"{{Hang on}}, I'll be right back.","translation":"Espera, vuelvo enseguida."},
+  {"pv":"hang out","meaning":"pasar el rato, juntarse","others":"","example":"We used to {{hang out}} at the park.","translation":"Solíamos pasar el rato en el parque."},
+  {"pv":"hang up","meaning":"colgar (el teléfono)","others":"","example":"Don't {{hang up}}, I need to tell you something.","translation":"No cuelgues, necesito decirte algo."},
+  {"pv":"hold on","meaning":"esperar","others":"agarrarse fuerte","group":"wait","example":"{{Hold on}} a second, please.","translation":"Espera un segundo, por favor."},
+  {"pv":"hold up","meaning":"retrasar","others":"asaltar; resistir","example":"Sorry I'm late, I was {{held up}} in traffic.","translation":"Perdón por llegar tarde, me entretuve en el tráfico."},
+  {"pv":"keep away (from)","meaning":"mantenerse alejado","others":"","example":"{{Keep away from}} the edge of the cliff.","translation":"Mantente alejado del borde del acantilado."},
+  {"pv":"keep on","meaning":"seguir, continuar (haciendo algo)","others":"","group":"continue","example":"He {{kept on}} talking during the film.","translation":"Siguió hablando durante la película."},
+  {"pv":"keep up (with)","meaning":"mantener el ritmo","others":"estar al día","example":"It's hard to {{keep up with}} new technology.","translation":"Es difícil mantenerse al día con la nueva tecnología."},
+  {"pv":"lay off","meaning":"despedir (por recorte de personal)","others":"","example":"The company {{laid off}} 200 employees.","translation":"La empresa despidió a 200 empleados."},
+  {"pv":"let down","meaning":"decepcionar, defraudar","others":"","example":"I promise I won't {{let you down}}.","translation":"Prometo que no te decepcionaré."},
+  {"pv":"lie down","meaning":"acostarse, recostarse","others":"","example":"I need to {{lie down}} for a while.","translation":"Necesito acostarme un rato."},
+  {"pv":"log in","meaning":"iniciar sesión","others":"","example":"{{Log in}} with your username and password.","translation":"Inicia sesión con tu nombre de usuario y contraseña."},
+  {"pv":"log out","meaning":"cerrar sesión","others":"","example":"Don't forget to {{log out of}} your account.","translation":"No olvides cerrar sesión en tu cuenta."},
+  {"pv":"look after","meaning":"cuidar","others":"","example":"Can you {{look after}} my dog this weekend?","translation":"¿Puedes cuidar a mi perro este fin de semana?"},
+  {"pv":"look down on","meaning":"menospreciar","others":"","example":"He {{looks down on}} people who didn't go to university.","translation":"Menosprecia a las personas que no fueron a la universidad."},
+  {"pv":"look for","meaning":"buscar","others":"","group":"search","example":"I'm {{looking for}} my keys.","translation":"Estoy buscando mis llaves."},
+  {"pv":"look forward to","meaning":"esperar con ganas","others":"","example":"I'm {{looking forward to}} seeing you.","translation":"Tengo muchas ganas de verte."},
+  {"pv":"look into","meaning":"investigar, examinar","others":"","example":"We'll {{look into}} the issue and get back to you.","translation":"Investigaremos el problema y te daremos una respuesta."},
+  {"pv":"look out","meaning":"tener cuidado","others":"","example":"{{Look out}}! There's a car coming.","translation":"¡Cuidado! Viene un coche."},
+  {"pv":"look up","meaning":"buscar (información)","others":"mejorar","group":"search","example":"{{Look up}} the word in the dictionary.","translation":"Busca la palabra en el diccionario."},
+  {"pv":"make out","meaning":"distinguir, descifrar","others":"besuquearse (informal)","example":"I can't {{make out}} what he's saying.","translation":"No logro distinguir lo que está diciendo."},
+  {"pv":"make up","meaning":"inventar","others":"reconciliarse; maquillarse; componer","example":"He {{made up}} an excuse for being late.","translation":"Inventó una excusa por llegar tarde."},
+  {"pv":"make up for","meaning":"compensar","others":"","example":"I'll {{make up for}} the lost time.","translation":"Compensaré el tiempo perdido."},
+  {"pv":"move in","meaning":"mudarse (a un lugar)","others":"","example":"Our new neighbours {{moved in}} last week.","translation":"Nuestros nuevos vecinos se mudaron la semana pasada."},
+  {"pv":"move on","meaning":"seguir adelante, pasar a otra cosa","others":"","example":"It's time to {{move on to}} the next topic.","translation":"Es hora de pasar al siguiente tema."},
+  {"pv":"move out","meaning":"mudarse (dejar un lugar)","others":"","example":"She {{moved out of}} her parents' house at 20.","translation":"Se mudó de la casa de sus padres a los 20."},
+  {"pv":"pass away","meaning":"fallecer","others":"","example":"His grandfather {{passed away}} last year.","translation":"Su abuelo falleció el año pasado."},
+  {"pv":"pass out","meaning":"desmayarse","others":"","example":"She {{passed out}} because of the heat.","translation":"Se desmayó por el calor."},
+  {"pv":"pay back","meaning":"devolver (dinero)","others":"","group":"return","example":"I'll {{pay you back}} next week.","translation":"Te devolveré el dinero la próxima semana."},
+  {"pv":"pay off","meaning":"dar resultado","others":"saldar una deuda","example":"All his hard work finally {{paid off}}.","translation":"Todo su esfuerzo finalmente dio resultado."},
+  {"pv":"pick up","meaning":"recoger","others":"levantar; aprender algo de forma natural","example":"I'll {{pick you up}} at the airport.","translation":"Te recogeré en el aeropuerto."},
+  {"pv":"point out","meaning":"señalar, hacer notar","others":"","example":"She {{pointed out}} a mistake in the report.","translation":"Señaló un error en el informe."},
+  {"pv":"put away","meaning":"guardar (en su lugar)","others":"","example":"{{Put away}} your toys, please.","translation":"Guarda tus juguetes, por favor."},
+  {"pv":"put down","meaning":"dejar (algo en una superficie)","others":"humillar","example":"{{Put}} the box {{down}} on the table.","translation":"Deja la caja sobre la mesa."},
+  {"pv":"put off","meaning":"posponer, aplazar","others":"","example":"Stop {{putting off}} your dentist appointment.","translation":"Deja de posponer tu cita con el dentista."},
+  {"pv":"put on","meaning":"ponerse (ropa)","others":"encender; subir de peso","example":"{{Put on}} your coat, it's cold outside.","translation":"Ponte el abrigo, hace frío afuera."},
+  {"pv":"put out","meaning":"apagar (fuego, cigarrillo)","others":"","group":"extinguish","example":"The firefighters {{put out}} the fire quickly.","translation":"Los bomberos apagaron el incendio rápidamente."},
+  {"pv":"put together","meaning":"armar, ensamblar, organizar","others":"","example":"We {{put together}} a presentation for the client.","translation":"Preparamos una presentación para el cliente."},
+  {"pv":"put up with","meaning":"tolerar, aguantar","others":"","example":"I can't {{put up with}} this noise anymore.","translation":"Ya no puedo tolerar más este ruido."},
+  {"pv":"rely on","meaning":"depender de, confiar en","others":"","group":"trust","example":"You can {{rely on}} her to finish the job.","translation":"Puedes confiar en que ella terminará el trabajo."},
+  {"pv":"rule out","meaning":"descartar","others":"","example":"The doctors have {{ruled out}} any serious problem.","translation":"Los médicos han descartado cualquier problema grave."},
+  {"pv":"run away","meaning":"huir, escaparse","others":"","example":"The dog {{ran away}} when it heard the thunder.","translation":"El perro huyó cuando escuchó el trueno."},
+  {"pv":"run into","meaning":"encontrarse con alguien por casualidad","others":"chocar con","group":"chance","example":"I {{ran into}} an old friend at the supermarket.","translation":"Me encontré con un viejo amigo en el supermercado."},
+  {"pv":"run out of","meaning":"quedarse sin","others":"","example":"We've {{run out of}} milk.","translation":"Nos quedamos sin leche."},
+  {"pv":"set off","meaning":"partir (de viaje)","others":"hacer sonar/estallar","example":"We {{set off}} early in the morning.","translation":"Partimos temprano por la mañana."},
+  {"pv":"set up","meaning":"establecer, montar, configurar","others":"","example":"They {{set up}} a new company in 2020.","translation":"Crearon una nueva empresa en 2020."},
+  {"pv":"settle down","meaning":"establecerse, sentar cabeza","others":"calmarse","example":"He wants to {{settle down}} and start a family.","translation":"Quiere establecerse y formar una familia."},
+  {"pv":"show off","meaning":"presumir, alardear","others":"","example":"Stop {{showing off}} your new phone!","translation":"¡Deja de presumir de tu teléfono nuevo!"},
+  {"pv":"show up","meaning":"aparecer, presentarse","others":"","group":"appear","example":"Only half of the guests {{showed up}}.","translation":"Solo se presentó la mitad de los invitados."},
+  {"pv":"shut down","meaning":"apagar (sistema)","others":"cerrar (negocio)","group":"extinguish","example":"{{Shut down}} your computer before leaving.","translation":"Apaga tu computadora antes de salir."},
+  {"pv":"sign up (for)","meaning":"inscribirse, registrarse","others":"","example":"I {{signed up for}} an English course.","translation":"Me inscribí en un curso de inglés."},
+  {"pv":"sit down","meaning":"sentarse","others":"","example":"Please {{sit down}} and make yourself comfortable.","translation":"Por favor, siéntate y ponte cómodo."},
+  {"pv":"slow down","meaning":"desacelerar, ir más despacio","others":"","example":"{{Slow down}}! You're driving too fast.","translation":"¡Más despacio! Estás conduciendo demasiado rápido."},
+  {"pv":"sort out","meaning":"resolver, ordenar, organizar","others":"","group":"solve","example":"Don't worry, we'll {{sort it out}}.","translation":"No te preocupes, lo resolveremos."},
+  {"pv":"speed up","meaning":"acelerar","others":"","example":"We need to {{speed up}} the process.","translation":"Necesitamos acelerar el proceso."},
+  {"pv":"split up","meaning":"separarse (pareja, grupo)","others":"","group":"relationship","example":"The band {{split up}} in 2010.","translation":"La banda se separó en 2010."},
+  {"pv":"stand for","meaning":"significar (siglas)","others":"tolerar","example":"What does \"NASA\" {{stand for}}?","translation":"¿Qué significa «NASA»?"},
+  {"pv":"stand out","meaning":"destacarse, sobresalir","others":"","example":"Her red dress really {{stood out}}.","translation":"Su vestido rojo realmente destacó."},
+  {"pv":"stand up","meaning":"ponerse de pie","others":"dejar plantado a alguien","example":"Everyone {{stood up}} when the judge entered.","translation":"Todos se pusieron de pie cuando entró el juez."},
+  {"pv":"stay up","meaning":"quedarse despierto hasta tarde","others":"","example":"I {{stayed up}} until 2 a.m. watching a series.","translation":"Me quedé despierto hasta las 2 a. m. viendo una serie."},
+  {"pv":"stick to","meaning":"atenerse a, mantenerse fiel a","others":"","example":"Let's {{stick to}} the plan.","translation":"Mantengámonos fieles al plan."},
+  {"pv":"take after","meaning":"parecerse a (un familiar)","others":"","example":"She {{takes after}} her mother.","translation":"Se parece a su madre."},
+  {"pv":"take off","meaning":"despegar (avión)","others":"quitarse (ropa); tener éxito rápido","example":"The plane {{took off}} on time.","translation":"El avión despegó a tiempo."},
+  {"pv":"take on","meaning":"asumir (responsabilidad)","others":"contratar","example":"She {{took on}} a new role in the company.","translation":"Asumió un nuevo cargo en la empresa."},
+  {"pv":"take over","meaning":"tomar el control, hacerse cargo","others":"","example":"A bigger company {{took over}} the business.","translation":"Una empresa más grande tomó el control del negocio."},
+  {"pv":"take up","meaning":"empezar (un hobby)","others":"ocupar (espacio/tiempo)","group":"hobby","example":"I {{took up}} running last year.","translation":"Empecé a correr como hobby el año pasado."},
+  {"pv":"think over","meaning":"pensar bien, reflexionar sobre algo","others":"","example":"{{Think}} it {{over}} and let me know tomorrow.","translation":"Piénsalo bien y avísame mañana."},
+  {"pv":"throw away","meaning":"tirar (a la basura)","others":"","group":"dispose","example":"Don't {{throw away}} those boxes, we can reuse them.","translation":"No tires esas cajas, podemos reutilizarlas."},
+  {"pv":"try on","meaning":"probarse (ropa)","others":"","example":"Can I {{try on}} these jeans?","translation":"¿Puedo probarme estos jeans?"},
+  {"pv":"try out","meaning":"probar (algo nuevo)","others":"","example":"Let's {{try out}} the new restaurant downtown.","translation":"Probemos el nuevo restaurante del centro."},
+  {"pv":"turn down","meaning":"rechazar","others":"bajar (volumen)","example":"He {{turned down}} the job offer.","translation":"Rechazó la oferta de trabajo."},
+  {"pv":"turn into","meaning":"convertirse en","others":"","example":"The caterpillar {{turned into}} a butterfly.","translation":"La oruga se convirtió en mariposa."},
+  {"pv":"turn off","meaning":"apagar","others":"","group":"extinguish","example":"{{Turn off}} the lights when you leave.","translation":"Apaga las luces cuando salgas."},
+  {"pv":"turn on","meaning":"encender, prender","others":"","example":"Can you {{turn on}} the TV?","translation":"¿Puedes encender la televisión?"},
+  {"pv":"turn out","meaning":"resultar (ser)","others":"","group":"result","example":"The party {{turned out}} to be great fun.","translation":"La fiesta resultó ser muy divertida."},
+  {"pv":"turn up","meaning":"aparecer, llegar","others":"subir (volumen)","group":"appear","example":"He {{turned up}} an hour late.","translation":"Apareció una hora tarde."},
+  {"pv":"wake up","meaning":"despertarse","others":"","example":"I {{woke up}} because of the noise.","translation":"Me desperté por el ruido."},
+  {"pv":"wear out","meaning":"gastar(se) por el uso","others":"agotar a alguien","example":"Running every day {{wore out}} my shoes.","translation":"Correr todos los días desgastó mis zapatos."},
+  {"pv":"work out","meaning":"hacer ejercicio","others":"resolver; salir bien","example":"I {{work out}} at the gym three times a week.","translation":"Hago ejercicio en el gimnasio tres veces por semana."},
+  {"pv":"write down","meaning":"anotar, apuntar","others":"","example":"{{Write down}} my phone number.","translation":"Anota mi número de teléfono."}
+];
+
+let queue = [];
+let learned = new Set();
+let attempts = 0;
+let wrongCount = 0;
+let streak = 0;
+let bestStreak = 0;
+let mistakes = {};
+let total = 0;
+let current = null;
+let answered = true;
+let startTime = 0;
+let timerInterval = null;
+
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function normalizeMeaning(text) {
+  return text.toLocaleLowerCase('es').replace(/[.;]/g, '').trim();
+}
+
+function pickDistractors(item, amount) {
+  const correctMeaning = normalizeMeaning(item.meaning);
+  const pool = shuffle(PHRASAL_VERBS.filter(candidate =>
+    candidate.pv !== item.pv &&
+    normalizeMeaning(candidate.meaning) !== correctMeaning &&
+    (!item.group || candidate.group !== item.group)
+  ));
+  const picked = [];
+  for (const candidate of pool) {
+    if (picked.every(other => normalizeMeaning(other.meaning) !== normalizeMeaning(candidate.meaning))) {
+      picked.push(candidate);
+      if (picked.length === amount) break;
+    }
+  }
+  return picked;
+}
+
+function renderExample(item) {
+  return item.example.replace(/\{\{([^}]+)\}\}/g, '<b>$1</b>');
+}
+
+function updateStats() {
+  document.getElementById('learned').textContent = learned.size;
+  document.getElementById('queue-count').textContent = queue.length;
+  document.getElementById('wrong-count').textContent = wrongCount;
+  document.getElementById('streak').textContent = streak;
+  const progress = total ? Math.round(learned.size / total * 100) : 0;
+  document.getElementById('progress-fill').style.width = progress + '%';
+  document.querySelector('.progress-bar').setAttribute('aria-valuenow', progress);
+}
+
+function startGame(size) {
+  if (![10, 15, 20].includes(size)) return;
+  queue = shuffle([...PHRASAL_VERBS]).slice(0, size);
+  total = size;
+  learned = new Set();
+  attempts = 0;
+  wrongCount = 0;
+  streak = 0;
+  bestStreak = 0;
+  mistakes = {};
+  current = null;
+  answered = true;
+  document.getElementById('total').textContent = total;
+  document.getElementById('timer').textContent = '0:00';
+  document.getElementById('start-screen').classList.add('hidden');
+  document.getElementById('end-screen').classList.add('hidden');
+  document.getElementById('game-screen').classList.remove('hidden');
+  startTime = Date.now();
+  if (timerInterval) clearInterval(timerInterval);
+  timerInterval = setInterval(updateTimer, 1000);
+  nextCard();
+}
+
+function updateTimer() {
+  const seconds = Math.floor((Date.now() - startTime) / 1000);
+  const minutes = Math.floor(seconds / 60);
+  document.getElementById('timer').textContent = minutes + ':' + String(seconds % 60).padStart(2, '0');
+}
+
+function nextCard() {
+  document.getElementById('feedback').classList.add('hidden');
+  document.getElementById('next-btn').classList.add('hidden');
+  if (learned.size >= total) { endGame(); return; }
+
+  current = queue.shift();
+  if (!current) { endGame(); return; }
+  answered = false;
+  document.getElementById('question-content').textContent = current.pv;
+
+  const card = document.getElementById('card');
+  card.style.animation = 'none';
+  void card.offsetWidth;
+  card.style.animation = '';
+
+  const options = shuffle([
+    { item: current, correct: true },
+    ...pickDistractors(current, 3).map(item => ({ item, correct: false }))
+  ]);
+  const optionsDiv = document.getElementById('options');
+  optionsDiv.innerHTML = '';
+  options.forEach(option => {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'opt-btn';
+    button.textContent = option.item.meaning;
+    button.onclick = () => answer(button, option.correct, options);
+    optionsDiv.appendChild(button);
+  });
+  updateStats();
+}
+
+function feedbackDetails(item) {
+  return `
+    <p><b>${item.pv}</b> = <i>${item.meaning}</i></p>
+    ${item.others ? `<p class="other-meanings"><b>Otros significados:</b> ${item.others}</p>` : ''}
+    <div class="example">📝 ${renderExample(item)}</div>
+    <div class="translation">🇪🇸 ${item.translation}</div>
+  `;
+}
+
+function answer(button, isCorrect, options) {
+  if (answered) return;
+  answered = true;
+  attempts++;
+  const allButtons = [...document.querySelectorAll('.opt-btn')];
+  allButtons.forEach(other => { other.disabled = true; });
+
+  const feedback = document.getElementById('feedback');
+  if (isCorrect) {
+    learned.add(current.pv);
+    streak++;
+    bestStreak = Math.max(bestStreak, streak);
+    button.classList.add('correct-ans');
+    allButtons.forEach(other => { if (other !== button) other.classList.add('faded'); });
+    feedback.className = 'feedback correct';
+    feedback.innerHTML = '<h3>✅ ¡Correcto!</h3>' + feedbackDetails(current);
+  } else {
+    wrongCount++;
+    streak = 0;
+    mistakes[current.pv] = (mistakes[current.pv] || 0) + 1;
+    queue.push(current);
+    button.classList.add('wrong-ans');
+    allButtons.forEach((other, index) => {
+      if (options[index].correct) other.classList.add('correct-ans');
+      else if (other !== button) other.classList.add('faded');
+    });
+    feedback.className = 'feedback wrong';
+    feedback.innerHTML = '<h3>❌ Incorrecto</h3>' + feedbackDetails(current) +
+      '<p class="requeue-note">🔁 Este phrasal verb volverá a aparecer hasta que lo aciertes.</p>';
+  }
+
+  updateStats();
+  feedback.classList.remove('hidden');
+  document.getElementById('next-btn').classList.remove('hidden');
+  document.getElementById('next-btn').focus();
+}
+
+function endGame() {
+  clearInterval(timerInterval);
+  timerInterval = null;
+  document.getElementById('game-screen').classList.add('hidden');
+  document.getElementById('end-screen').classList.remove('hidden');
+  const correctAttempts = attempts - wrongCount;
+  const accuracy = attempts > 0 ? Math.round(correctAttempts / attempts * 100) : 100;
+  document.getElementById('final-score').textContent = accuracy + '%';
+  document.getElementById('final-time').textContent = document.getElementById('timer').textContent;
+  document.getElementById('final-attempts').textContent = attempts;
+  document.getElementById('final-wrong').textContent = wrongCount;
+  document.getElementById('final-best-streak').textContent = bestStreak;
+
+  const reviewBlock = document.getElementById('review-block');
+  const failed = Object.entries(mistakes).sort((a, b) => b[1] - a[1]);
+  if (failed.length) {
+    reviewBlock.innerHTML = '<h3 style="color:#d63031;">📚 Repasa los que más te costaron:</h3>' +
+      failed.map(([pv, count]) => {
+        const item = PHRASAL_VERBS.find(candidate => candidate.pv === pv);
+        return `<div class="review-item">
+          <span class="pv">${pv}</span> (${count} error${count > 1 ? 'es' : ''}) — ${item.meaning}
+          <div class="ex">📝 ${renderExample(item)}</div>
+          <div class="es">🇪🇸 ${item.translation}</div>
+        </div>`;
+      }).join('');
+  } else {
+    reviewBlock.innerHTML = '<h3 style="color:#00b894;text-align:center;">🏆 ¡Ronda perfecta sin errores!</h3>';
+  }
+}
+
+function showStart() {
+  clearInterval(timerInterval);
+  timerInterval = null;
+  current = null;
+  answered = true;
+  document.getElementById('game-screen').classList.add('hidden');
+  document.getElementById('end-screen').classList.add('hidden');
+  document.getElementById('start-screen').classList.remove('hidden');
+}
+</script>
+</body>
+</html>
