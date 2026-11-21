@@ -4,7 +4,7 @@
  *   - Everything else (CSS, JS, images, manifest): cache-first with network update
  *   - CACHE_VERSION bumped on each deploy; old caches cleaned in activate
  */
-var CACHE_VERSION = 'v1';
+var CACHE_VERSION = 'v2';
 
 var CACHE_NAME = CACHE_VERSION + '-cache';
 
@@ -13,19 +13,47 @@ var CACHE_NAME = CACHE_VERSION + '-cache';
  * The SW installs only if all these files cache successfully. */
 var PRECACHE = [
   '/',
-  'index.html',
-  'games/phrasal-verbs/game1.html',
-  'games/phrasal-verbs/game2.html',
-  'games/phrasal-verbs/game4.html',
-  'games/gerund-infinitive/game3.html',
-  'pwa.js',
-  'manifest.webmanifest',
-  'icons/icon-192.png',
-  'icons/icon-512.png',
-  'icons/icon-maskable-512.png',
-  'icons/apple-touch-icon.png',
-  'icons/favicon-32.png',
-  'icons/icon.svg'
+  '/index.html',
+  '/games/phrasal-verbs/game1.html',
+  '/games/phrasal-verbs/game2.html',
+  '/games/phrasal-verbs/game4.html',
+  '/games/gerund-infinitive/game3.html',
+  '/pwa.js',
+  '/manifest.json',
+  '/favicon.ico',
+  '/icons/icon-72.png',
+  '/icons/icon-96.png',
+  '/icons/icon-128.png',
+  '/icons/icon-144.png',
+  '/icons/icon-152.png',
+  '/icons/icon-192.png',
+  '/icons/icon-384.png',
+  '/icons/icon-512.png',
+  '/icons/icon.svg',
+  '/icons/icon-maskable-192.png',
+  '/icons/icon-maskable-512.png',
+  '/icons/icon-maskable.svg',
+  '/icons/icon-monochrome-192.png',
+  '/icons/icon-monochrome-512.png',
+  '/icons/icon-monochrome.svg',
+  '/icons/apple-touch-icon.png',
+  '/icons/favicon-16.png',
+  '/icons/favicon-32.png',
+  '/icons/favicon-48.png',
+  '/splash/apple-splash-750x1334.png',
+  '/splash/apple-splash-828x1792.png',
+  '/splash/apple-splash-1125x2436.png',
+  '/splash/apple-splash-1170x2532.png',
+  '/splash/apple-splash-1179x2556.png',
+  '/splash/apple-splash-1206x2622.png',
+  '/splash/apple-splash-1242x2688.png',
+  '/splash/apple-splash-1284x2778.png',
+  '/splash/apple-splash-1290x2796.png',
+  '/splash/apple-splash-1320x2868.png',
+  '/splash/apple-splash-1536x2048.png',
+  '/splash/apple-splash-1640x2360.png',
+  '/splash/apple-splash-1668x2388.png',
+  '/splash/apple-splash-2048x2732.png'
 ];
 
 /* Install: cache all precache assets (skip already-cached on update) */
