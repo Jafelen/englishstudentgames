@@ -4,6 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>English Student Games — Juegos para aprender inglés</title>
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#302b63">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -209,6 +215,7 @@
   <p class="tagline">Juegos interactivos para aprender y practicar inglés — diseñados para todas las edades</p>
 </header>
 <div class="game-count"><span>4</span> juegos disponibles</div>
+<button id="pwa-install-btn" style="display:none;margin:8px auto;padding:8px 18px;border:2px solid rgba(255,255,255,0.3);border-radius:99px;background:rgba(255,255,255,0.1);color:#fff;font-size:0.9em;font-weight:600;cursor:pointer;transition:all 0.2s;" onclick="this.style.display='none';if(window.deferredPWA)window.deferredPWA.prompt()">📲 Instalar en tu teléfono</button>
 
 <div class="filter-bar">
   <button class="filter-btn active" data-filter="all">Todos</button>
@@ -308,6 +315,34 @@
     });
   });
 </script>
+
+<script src="/pwa.js"></script>
+<script>
+  /* Android banner: wire the confirm button to the deferred prompt stored by pwa.js */
+  document.addEventListener('DOMContentLoaded', function() {
+    var confirmBtn = document.querySelector('[data-pwa-install-confirm]');
+    if (confirmBtn) {
+      confirmBtn.addEventListener('click', function() {
+        if (window.deferredPWA) {
+          window.deferredPWA.prompt();
+          window.deferredPWA.userChoice.then(function() { window.deferredPWA = null; });
+        }
+        document.getElementById('pwa-android-banner').style.display = 'none';
+      });
+    }
+  });
+</script>
+
+<div id="pwa-android-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;background:rgba(48,43,99,0.97);padding:16px 20px;color:#fff;font-size:0.9em;box-shadow:0 -2px 12px rgba(0,0,0,0.3);z-index:9999;text-align:center;" class="pwa-banner">
+  <p style="margin:0 0 10px;">🎮 English Student Games — ¡instalalo en tu teléfono y jugá sin conexión!</p>
+  <button data-pwa-install-confirm style="padding:8px 20px;border:none;border-radius:99px;background:#ffd200;color:#222;font-weight:700;cursor:pointer;margin-right:8px;font-size:0.95em;">Instalar</button>
+  <button data-pwa-close style="padding:8px 20px;border:1px solid rgba(255,255,255,0.3);border-radius:99px;background:transparent;color:rgba(255,255,255,0.7);cursor:pointer;font-size:0.95em;">Ahora no</button>
+</div>
+
+<div id="pwa-ios-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;background:rgba(48,43,99,0.97);padding:16px 20px;color:#fff;font-size:0.85em;box-shadow:0 -2px 12px rgba(0,0,0,0.3);z-index:9999;text-align:center;" class="pwa-banner">
+  <p style="margin:0 0 10px;">📱 <strong>Instalá la app:</strong> tocan el botón Compartir <span style="font-size:1.2em;">⎋</span> y elegí <strong>"Agregar a inicio"</strong></p>
+  <button data-pwa-close style="padding:8px 20px;border:1px solid rgba(255,255,255,0.3);border-radius:99px;background:transparent;color:rgba(255,255,255,0.7);cursor:pointer;font-size:0.95em;">Entendido</button>
+</div>
 
 </body>
 </html>

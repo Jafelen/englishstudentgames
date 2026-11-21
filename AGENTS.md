@@ -80,6 +80,17 @@ Line endings are normalized to LF by `.gitattributes`. Keep it that way: a CRLF 
 
   All hardcoded counts now match the data arrays. When you touch a game, fix its own labels; updating the portal cards is a copy change, so ask before doing it as a side effect.
 
+## PWA
+
+The site is a PWA (Progressive Web App) — installable on Android (via the install button or "Add to home screen") and iOS (via Share → "Add to Home Screen").
+
+- `manifest.webmanifest` — app name, icons, colors. `start_url` and `scope` are `/`.
+- `sw.js` — service worker. HTML is **network-first with cache fallback** (updates arrive as soon as there's connectivity); everything else is **cache-first with background update**. Bump `CACHE_VERSION` at every deploy so the new cache replaces the old one.
+- `pwa.js` — shared script loaded by every page. Registers the SW, shows the install UI, remembers "Ahora no" for 7 days, hides everything once installed.
+- `icons/` — PNG icons in 192, 512, maskable-512, 180, and 32, plus an SVG.
+
+When adding a new game, add its path to the `PRECACHE` array in `sw.js` and bump `CACHE_VERSION`.
+
 ## Preview
 
 Serve the repo over HTTP and open the portal, then follow the cards:

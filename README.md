@@ -70,6 +70,7 @@ Meaning-matching game for B2 phrasal verbs, with the contextual sense of each on
 3. If the theme is new, add a filter button `<button data-filter="<theme>">` next to the existing ones.
 4. Update the `N` in the portal header counter (`<span>N</span> juegos disponibles`).
 5. Update the hand-maintained counts table in `AGENTS.md` and the Games section above — the copy drifts whenever a data array changes.
+6. Add the new game's path to the `PRECACHE` array in `sw.js` and bump `CACHE_VERSION` at the top of that file.
 
 ## Preview
 
@@ -80,3 +81,11 @@ python -m http.server 8000    # or: npx serve .
 ```
 
 Opening the files directly with `file://` mostly works, but the portal footer links `href="/"`, which then points at your filesystem root instead of the site root. Judge layout from the server.
+
+## PWA
+
+The site is installable as a Progressive Web App on Android and iOS. Once installed, it runs at full screen with an app icon and works **offline**.
+
+- **Android:** an install banner appears automatically; tap "Instalar" and confirm.
+- **iOS (Safari):** use the Share button → "Add to Home Screen".
+- After installation, the banner no longer appears.
