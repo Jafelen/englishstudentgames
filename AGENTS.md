@@ -16,6 +16,7 @@ Line endings are normalized to LF by `.gitattributes`. Keep it that way: a CRLF 
 | `games/phrasal-verbs/game1.html` | Phrasal Verbs — Memorización (linked from the portal) |
 | `games/phrasal-verbs/game2.html` | Phrasal Verbs — Memory / classify by theme (linked from the portal) |
 | `games/gerund-infinitive/game3.html` | Gerund & Infinitive Trainer (linked from the portal) |
+| `games/phrasal-verbs/game4.html` | Phrasal Verbs — Significados (linked from the portal) |
 | `CNAME` | GitHub Pages custom domain |
 
 ### The portal (`index.html`)
@@ -29,7 +30,8 @@ Line endings are normalized to LF by `.gitattributes`. Keep it that way: a CRLF 
 ### Phrasal Verbs — Memorización (`games/phrasal-verbs/game1.html`)
 
 - Data: `const PHRASAL_VERBS` — memory cards with the verb, its Spanish meaning and an example sentence.
-- Modes: `const MODES = ['MEANING', 'BLANK', 'REVERSE']`, with labels in `MODE_LABELS` and prompt copy in `MODE_PROMPTS`. The mode is drawn at random per card.- Four multiple-choice options; a wrong answer re-queues the card (`queue.push(current)` inside `answer()`), so the round ends only when every card was answered right.
+- Modes: `const MODES = ['MEANING', 'BLANK', 'REVERSE']`, with labels in `MODE_LABELS` and prompt copy in `MODE_PROMPTS`. The mode is drawn at random per card.
+- Four multiple-choice options; a wrong answer re-queues the card (`queue.push(current)` inside `answer()`), so the round ends only when every card was answered right.
 - Elapsed timer, streak counter, learned set, progress bar, and an end screen that lists the mistakes sorted by error count.
 - Uses the shared `site-header` (taskbar link back to the portal) and `site-footer`.
 
@@ -48,6 +50,16 @@ Line endings are normalized to LF by `.gitattributes`. Keep it that way: a CRLF 
 - Per-item hint, round counter, streak with escalating combo messages, per-category result breakdown, restart-confirm overlay, keyboard shortcuts `1`/`2`/`3` to answer and `Enter`/`Space` to continue (`Escape` closes the overlay); **no timer**.
 - Retry reinforcement: items missed in the previous round are re-added ×3 by `buildDeck` via `prevMissedWords`.
 
+### Phrasal Verbs — Significados (`games/phrasal-verbs/game4.html`)
+
+- Data: `const PHRASAL_VERBS` — 150 entries with `pv`, `meaning` (contextualised Spanish gloss), `others` (secondary meanings, often empty), `group` on entries that need anti-ambiguity, `example` (the target form wrapped in `{{...}}`) and `translation` (Spanish rendering of the example).
+- Start screen picks the round size: `startGame(10 | 15 | 20)`, dealt from a shuffled pool of all 150 entries.
+- Mechanic: one prompt and four options built by `pickDistractors(item, amount)`, which skips meanings that are equivalent (`normalizeMeaning`) or that share the entry's `group`.
+- Feedback (`feedbackDetails`) shows the English example with the target form highlighted, its Spanish translation and the `others` meanings.
+- A wrong answer re-queues the card at the end of the queue (`answer()`), so the round ends only when every card of the round was answered right at least once.
+- HUD: Aciertos (`learned`/`total`), En cola (`queue-count`), Errores (`wrong-count`), Racha (`streak`), Tiempo (`timer`) and a progress bar. The end screen reports percentage, time, attempts, errors, best streak and a review block; `showStart()` starts another round.
+- Uses the shared `site-header` (linking back to the portal) and `site-footer`. Nothing is persisted between rounds or sessions.
+
 ## Editing rules
 
 - Every user-facing string is **Spanish**. Code, comments, docs and commit messages stay English.
@@ -59,10 +71,12 @@ Line endings are normalized to LF by `.gitattributes`. Keep it that way: a CRLF 
   | `index.html` card 1 (description + tag) | `90 phrasal verbs` | 90 |
   | `index.html` card 2 (description + tag) | `91 phrasal verbs` | 91 |
   | `index.html` card 3 (description + tag) | `84 ejercicios` | 84 |
-  | `index.html` header counter | `<span>3</span> juegos disponibles` | 3 |
+  | `index.html` card 4 (description + tag) | `150 phrasal verbs` | 150 |
+  | `index.html` header counter | `<span>4</span> juegos disponibles` | 4 |
   | `game1.html` subtitle and "los 90" copy | `90` | 90 |
   | `game2.html` header copy | `91` | 91 |
   | `game3.html` `<span id="tot">` | `84` | 84 (also set at runtime by `render()`) |
+  | `game4.html` subtitle | `150` | 150 |
 
   All hardcoded counts now match the data arrays. When you touch a game, fix its own labels; updating the portal cards is a copy change, so ask before doing it as a side effect.
 
