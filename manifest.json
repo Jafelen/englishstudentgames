@@ -1,6 +1,6 @@
 {
   "name": "English Student Games",
-  "short_name": "ES Games",
+  "short_name": "EngGames",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
