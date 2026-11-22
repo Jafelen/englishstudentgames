@@ -4,7 +4,7 @@
  *   - Everything else (CSS, JS, images, manifest): cache-first with network update
  *   - CACHE_VERSION bumped on each deploy; old caches cleaned in activate
  */
-var CACHE_VERSION = 'v2';
+var CACHE_VERSION = 'v3';
 
 var CACHE_NAME = CACHE_VERSION + '-cache';
 
